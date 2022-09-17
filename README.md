@@ -106,9 +106,10 @@
 
 🎇 lazy loading을 이용한 코드 스플리팅,  웹 폰트 최적화를 통해 92점 까지 향상
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/82f755c9-9132-4a9f-b83d-867fb29e2ddd/Untitled.png)
+!![lighthouse80](https://user-images.githubusercontent.com/78852661/190861512-b62e82cd-dc4b-4781-9df5-21d76e78ceb3.png)
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ecef9e78-dc03-462b-ac3c-7783a82701ed/Untitled.png)
+![lighthouse92](https://user-images.githubusercontent.com/78852661/190861517-af7c3a53-7c85-4593-9ea2-0511ca442896.png)
+
 
 ## 👩🏻‍💻제작자들🧑🏻‍💻
 
