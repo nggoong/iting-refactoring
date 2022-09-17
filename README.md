@@ -43,7 +43,7 @@
 | --- | --- |
 | amazon S3 + CloudFront | 리액트 프로젝트는 정적 리소스인 html, css, javascript 파일로 이루어져 있는데, amazon S3가 정적 리소스를 저장하는 스토리지이지만, 배포가 가능하고, EC2보다 배포 및 서비스 비용이 저렴하기 때문에 S3를 선택하였고, HTTPS(redirect)를 적용하기 위해 CloundFront를 사용하였다.  |
 | SockJS | SockJS는 websocket 기반이지만, 순수 websocket과는 다르게 websocket을 지원하지 않는 브라우저에서도 HTTP polling과 같은 HTTP을 사용하여 실시간 통신 처럼 동작하게 한다.  |
-| react-query | Redux에 비해 서버와 통신하는 로직의 보일러 플레이트가 적고,  서버에서 최신의 데이터를 유지하는데 특화 되어 있으며, 데이터 캐싱, 값 업데이트, 에러핸들링 등 비동기 과정을 좀 더 용이하게 사용하기 위해 사용하였다. |
+| React Query | Redux에 비해 서버와 통신하는 로직의 보일러 플레이트가 적고,  서버에서 최신의 데이터를 유지하는데 특화 되어 있으며, 데이터 캐싱, 값 업데이트, 에러핸들링 등 비동기 과정을 좀 더 용이하게 사용하기 위해 사용하였다. |
 | context API | 이번 프로젝트에서는 client state의 비중이 적고, 단순히 로그인 유저의 정보를 저장하기 위한 목적과 props로 전달하기 까다로운 하나의 특정 부분을 해결하기 위해 Redux를 사용하는 것은 불필요하다고 판단 되어 리액트에 내장된 context API를 사용하였다.  |
 | axios | 모든 리퀘스트, 리스폰스에 대한 공통된 config 설정을 쉽게 할 수 있고, 서버에서 받아온 데이터를 자동으로 JSON으로 변환해주며, interceptors 기능을 사용하여 JWT 기반 인증 구현에 용이할 것으로 판단하였고, 브라우저 호환성이 뛰어나기 때문에 axios를 사용하였다. |
 
@@ -115,7 +115,8 @@
 
 |포지션|이름|담당|깃허브|
 |---|---|---|---|
-|Front-End_(React)|권익주|게시글/채팅방 불러오기 및 무한스크롤, 게시글/채팅방 해시태그 기반 검색 기능 및 검색어 자동완성 기능, 실시간 채팅 기능, 리프레시 토큰, 게시글 작성, 내가 쓴 글 모아보기, HTTPS배포 |[https://github.com/nggoong](https://github.com/nggoong)|
+|Front-End_(React)|권익주|게시글/채팅방 불러오기 및 무한스크롤, 게시글/채팅방 해시태그 기반 검색 기능 및 검색어 자동완성 기능, 실시간 채팅 기능, 리프레시 토큰, 게시글 작성, 내가 쓴 글 모아보기, HTTPS배포,
+성능개선(lighthouse 퍼포먼스 점수) |[https://github.com/nggoong](https://github.com/nggoong)|
 |Front-End_(React)|설승운|게시글 상세페이지, 게시글 수정&삭제&공감, 댓글 작성&수정&삭제&공감, 마이페이지, 마이페이지 개인정보 변경, 비밀번호 변경, 댓글 단 글|[https://github.com/s-woon](https://github.com/s-woon)|
 |Front-End_(React)|김다희|회원가입, 로그인 페이지, 소셜로그인|[https://github.com/uglad22](https://github.com/uglad22)|
 |Back-End_(Spring)|문철현|로그인,회원가입, 마이페이지, 리프레시 토큰|[https://github.com/MoonDoorKing](https://github.com/MoonDoorKing)|
