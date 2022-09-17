@@ -98,6 +98,18 @@
 - [ ]  해결 방법
     - 쿼리 키 값을 [”post”, postingId]로 상세페이지 포스팅 아이디 별로 캐싱 처리
 
+---
+
+### ❗ 성능 개선 ❗
+
+🎇 lighthouse로 퍼포먼스 점수 측정 결과 80점이 나옴
+
+🎇 lazy loading을 이용한 코드 스플리팅,  웹 폰트 최적화를 통해 92점 까지 향상
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/82f755c9-9132-4a9f-b83d-867fb29e2ddd/Untitled.png)
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ecef9e78-dc03-462b-ac3c-7783a82701ed/Untitled.png)
+
 ## 👩🏻‍💻제작자들🧑🏻‍💻
 
 |포지션|이름|담당|깃허브|
