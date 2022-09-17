@@ -115,8 +115,7 @@
 
 |포지션|이름|담당|깃허브|
 |---|---|---|---|
-|Front-End_(React)|권익주|게시글/채팅방 불러오기 및 무한스크롤, 게시글/채팅방 해시태그 기반 검색 기능 및 검색어 자동완성 기능, 실시간 채팅 기능, 리프레시 토큰, 게시글 작성, 내가 쓴 글 모아보기, HTTPS배포,
-성능개선(lighthouse 퍼포먼스 점수) |[https://github.com/nggoong](https://github.com/nggoong)|
+|Front-End_(React)|권익주|게시글/채팅방 불러오기 및 무한스크롤, 게시글/채팅방 해시태그 기반 검색 기능 및 검색어 자동완성 기능, 실시간 채팅 기능, 리프레시 토큰, 게시글 작성, 내가 쓴 글 모아보기, HTTPS배포,성능개선(lighthouse 퍼포먼스 점수) |[https://github.com/nggoong](https://github.com/nggoong)|
 |Front-End_(React)|설승운|게시글 상세페이지, 게시글 수정&삭제&공감, 댓글 작성&수정&삭제&공감, 마이페이지, 마이페이지 개인정보 변경, 비밀번호 변경, 댓글 단 글|[https://github.com/s-woon](https://github.com/s-woon)|
 |Front-End_(React)|김다희|회원가입, 로그인 페이지, 소셜로그인|[https://github.com/uglad22](https://github.com/uglad22)|
 |Back-End_(Spring)|문철현|로그인,회원가입, 마이페이지, 리프레시 토큰|[https://github.com/MoonDoorKing](https://github.com/MoonDoorKing)|
