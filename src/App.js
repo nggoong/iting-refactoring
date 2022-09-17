@@ -1,36 +1,47 @@
 import React, { useEffect, useContext } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 
+import Splash from './pages/Splash';
 import PostingViewer from './pages/PostingViewer';
-import Detail from "./pages/Detail";
-import Post from './pages/Post';
-import CreateRoom from './pages/CreateRoom';
-import ChatRoom from './pages/ChatRoom';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
-import KakaoLogin from './components/KakaoLogin';
+// import Detail from "./pages/Detail";
+// import Post from './pages/Post';
+// import CreateRoom from './pages/CreateRoom';
+// import ChatRoom from './pages/ChatRoom';
+// import Signup from './pages/Signup';
+// import Login from './pages/Login';
+// import KakaoLogin from './components/KakaoLogin';
 import Navigation from './components/nav/Navigation';
-import Mypage from './pages/Mypage';
-import RoomViewer from './pages/RoomViewer';
-import MyInfoManage from './pages/MyInfoManage';
-import MyPwManage from './pages/MyPwManage';
+// import Mypage from './pages/Mypage';
+// import RoomViewer from './pages/RoomViewer';
+// import MyInfoManage from './pages/MyInfoManage';
+// import MyPwManage from './pages/MyPwManage';
 import PrivateRoute from './components/limitAuthRoute/PrivateRoute';
 import UserLimitRoute from './components/limitAuthRoute/UserLimitRoute';
 import ErrorFound from './components/notice/NotFound';
-import CommentInPost from './pages/CommentInPost';
+// import CommentInPost from './pages/CommentInPost';
 import { Routes, Route, useLocation } from 'react-router-dom';
 
 import instance from './shared/axios';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { userContext } from './context/UserProvider';
-import Splash from './pages/Splash';
+
 import { AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet'
-
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/tracing";
 
+const Detail = React.lazy(()=> import("./pages/Detail"));
+const Post = React.lazy(() => import("./pages/Post"));
+const CreateRoom = React.lazy(()=> import("./pages/CreateRoom"));
+const ChatRoom = React.lazy(() => import("./pages/ChatRoom"));
+const Signup = React.lazy(()=> import("./pages/Signup"));
+const Login = React.lazy(() => import("./pages/Login"));
+const KakaoLogin = React.lazy(() => import("./components/KakaoLogin"));
+const Mypage = React.lazy(()=> import("./pages/Mypage"));
+const RoomViewer = React.lazy(() => import("./pages/RoomViewer"));
+const MyInfoManage = React.lazy(() => import("./pages/MyInfoManage"));
+const MyPwManage = React.lazy(()=> import("./pages/MyPwManage"));
+const CommentInPost = React.lazy(()=> import("./pages/CommentInPost"));
 
 
 function App() {
