@@ -104,11 +104,12 @@
 
 🎇 lighthouse로 퍼포먼스 점수 측정 결과 80점이 나옴
 
-🎇 lazy loading을 이용한 코드 스플리팅,  웹 폰트 최적화를 통해 92점 까지 향상
+🎇 lazy loading을 이용한 코드 스플리팅,  웹 폰트 최적화, cloudfront 캐시 정책을 변경하여 통해 97점 까지 향상
 
-!![lighthouse80](https://user-images.githubusercontent.com/78852661/190861512-b62e82cd-dc4b-4781-9df5-21d76e78ceb3.png)
+![lighthouse80](https://user-images.githubusercontent.com/78852661/190861512-b62e82cd-dc4b-4781-9df5-21d76e78ceb3.png)
 
-![lighthouse92](https://user-images.githubusercontent.com/78852661/190861517-af7c3a53-7c85-4593-9ea2-0511ca442896.png)
+![image](https://user-images.githubusercontent.com/78852661/190935121-bd7ba495-71bd-4236-b9cc-9ba168334e68.png)
+
 
 
 ## 👩🏻‍💻제작자들🧑🏻‍💻
