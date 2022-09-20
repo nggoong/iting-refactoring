@@ -18,7 +18,7 @@ const Post = () => {
   const userInfoContext = useContext(userContext);
   const { userInfo } = userInfoContext.state;
   const hashRef = useRef(null);
-  const [tempPostData, setTempPostData] = useState({
+  const [postData, setPostData] = useState({
     title: "",
     posting_content: "",
     hashtag: [],
@@ -36,7 +36,7 @@ const Post = () => {
   const changeTextData = (e) => {
     // context의 state를 변경
     // 글을 등록할 때 context의 state를 서버에 request body로 보내기 때문
-    setTempPostData({ ...tempPostData, [e.target.name]: e.target.value });
+    setPostData({ ...postData, [e.target.name]: e.target.value });
   };
 
   // velog 처럼 해시태그 추가할 때 스페이스바 누르면 추가되는 기능
@@ -47,12 +47,12 @@ const Post = () => {
         return;
       } else {
         const result = hashInput.replace(/[/!@#$%^&*~)(/?><\s]/g, "");
-        const valid = hashtagValidation(result, tempPostData.hashtag);
+        const valid = hashtagValidation(result, postData.hashtag);
         if (!valid) return;
         else {
-          setTempPostData({
-            ...tempPostData,
-            hashtag: [...tempPostData.hashtag, result],
+          setPostData({
+            ...postData,
+            hashtag: [...postData.hashtag, result],
           });
           setHashInput("");
         }
@@ -67,73 +67,70 @@ const Post = () => {
       return;
     } else {
       const result = hashInput.replace(/[/!@#$%^&*~)(/?><\s]/g, "");
-      const valid = hashtagValidation(result, tempPostData.hashtag);
+      const valid = hashtagValidation(result, postData.hashtag);
       if (!valid) return;
       else {
-        setTempPostData({
-          ...tempPostData,
-          hashtag: [...tempPostData.hashtag, result],
+        setPostData({
+          ...postData,
+          hashtag: [...postData.hashtag, result],
         });
         setHashInput("");
       }
     }
   };
-  const { mutate: submitPosting } = useMutation(
-    postingsAPI.postPosting,
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(["postings"]);
-        return navigate("/viewer/posting/list");
-      },
-      onError: (err) => {
-        if (err.response.status === 401) return;
-        alert("게시글을 등록하지 못했습니다.");
-        navigate("/viewer/posting/list");
-      },
-    }
-  );
-
-  const { mutate:submitEditing } = useMutation(postingsAPI.postEditing, {
+  const { mutate: submitPosting } = useMutation(postingsAPI.postPosting, {
     onSuccess: async () => {
-        alert("게시글이 수정되었습니다.");
-        await queryClient.invalidateQueries(["postings"]);
-        return navigate(`/detail/posting/${postingId}`);
+      await queryClient.invalidateQueries(["postings"]);
+      return navigate("/viewer/posting/list");
     },
     onError: (err) => {
-        if(err.response.status === 401) return;
-        alert("게시글을 수정하지 못했습니다.");
-        navigate("/viewer/posting/list");
-    }
-});
+      if (err.response.status === 401) return;
+      alert("게시글을 등록하지 못했습니다.");
+      navigate("/viewer/posting/list");
+    },
+  });
+
+  const { mutate: submitEditing } = useMutation(postingsAPI.postEditing, {
+    onSuccess: async () => {
+      alert("게시글이 수정되었습니다.");
+      await queryClient.invalidateQueries(["postings"]);
+      return navigate(`/detail/posting/${postingId}`);
+    },
+    onError: (err) => {
+      if (err.response.status === 401) return;
+      alert("게시글을 수정하지 못했습니다.");
+      navigate("/viewer/posting/list");
+    },
+  });
 
   const postSubmitHandler = () => {
     //TODO: useMutation 사용해서 글 작성
-    const {title, posting_content, hashtag} = tempPostData;
-    if(!title || !posting_content) {
-        alert("제목과 내용을 모두 채워주세요!");
-        return;
+    const { title, posting_content, hashtag } = postData;
+    if (!title || !posting_content) {
+      alert("제목과 내용을 모두 채워주세요!");
+      return;
     }
     const newData = {
-        title,
-        posting_content,
-        hashtag,
-        // imgUrl:'shdlfl' // TODO: 지우기
-    }
+      title,
+      posting_content,
+      hashtag,
+      // imgUrl:'shdlfl' // TODO: 지우기
+    };
     submitPosting(newData);
     // navigate("/viewer/posting/list");
     // return queryClient.invalidateQueries(["postings"]);
-}
+  };
 
-const postEditHandler = () => {
-    const {title, posting_content, hashtag} = tempPostData;
+  const postEditHandler = () => {
+    const { title, posting_content, hashtag } = postData;
     const newData = {
-        title,
-        posting_content,
-        hashtag,
-        // imgUrl:'shdlfl'
-    }
-    submitEditing({postingId, newData});
-}
+      title,
+      posting_content,
+      hashtag,
+      // imgUrl:'shdlfl'
+    };
+    submitEditing({ postingId, newData });
+  };
 
   useEffect(() => {
     if (postingId) {
@@ -147,7 +144,7 @@ const postEditHandler = () => {
           return;
         }
 
-        setTempPostData({
+        setPostData({
           title: data.title,
           posting_content: data.posting_content,
           hashtag: data.hashtag,
@@ -157,14 +154,14 @@ const postEditHandler = () => {
     }
 
     return () => {
-      setTempPostData({ title: "", posting_content: "", hashtag: [] });
+      setPostData({ title: "", posting_content: "", hashtag: [] });
     };
   }, []);
 
   useEffect(() => {
-    if (!tempPostData.hashtag.length) return;
+    if (!postData.hashtag.length) return;
     hashRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [tempPostData.hashtag]);
+  }, [postData.hashtag]);
   return (
     <WhiteBackground>
       <Helmet>
@@ -174,23 +171,33 @@ const postEditHandler = () => {
         <link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
       </Helmet>
       <PostWrapper>
-        {pathname === "/posting" && <Header title="글쓰기" isAction={true} postActions={postSubmitHandler}/>}
+        {pathname === "/posting" && (
+          <Header
+            title="글쓰기"
+            isAction={true}
+            postActions={postSubmitHandler}
+          />
+        )}
         {pathname === `/posting/edit/${postingId}` && (
-          <Header title="수정하기" isAction={true} postActions={postEditHandler}/>
+          <Header
+            title="수정하기"
+            isAction={true}
+            postActions={postEditHandler}
+          />
         )}
 
         <PostContent>
           <input
             type="text"
             placeholder="제목을 입력해주세요."
-            value={tempPostData.title}
+            value={postData.title}
             name="title"
             onChange={changeTextData}
           ></input>
           <HRLineDiv />
           <textarea
             placeholder="내용을 입력해주세요."
-            value={tempPostData.posting_content}
+            value={postData.posting_content}
             name="posting_content"
             onChange={changeTextData}
           ></textarea>
@@ -232,8 +239,14 @@ const postEditHandler = () => {
             ></input>
           </HashTagForm>
           <HashtagViewer ref={hashRef}>
-            {tempPostData.hashtag.map((tag, index) => (
-              <DeletableBadge key={index} idx={index} hashtag={tempPostData.hashtag} data={tempPostData} setHashtag={setTempPostData}>
+            {postData.hashtag.map((tag, index) => (
+              <DeletableBadge
+                key={index}
+                idx={index}
+                hashtag={postData.hashtag}
+                data={postData}
+                setHashtag={setPostData}
+              >
                 {tag}
               </DeletableBadge>
             ))}
