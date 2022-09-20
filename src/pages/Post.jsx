@@ -3,7 +3,6 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { WhiteBackground, HRLineDiv } from "../style/sharedStyle";
 import { userContext } from "../context/UserProvider";
-import { submitDataContext } from "../context/SubmitDataProvider";
 import Header from "../components/header/Header";
 import DeletableBadge from "../components/hashtag/DeletableBadge";
 import { hashtagValidation } from "../shared/sharedFn";
@@ -16,12 +15,8 @@ import { Helmet } from "react-helmet";
 const Post = () => {
   const queryClient = useQueryClient();
   const [hashInput, setHashInput] = useState("");
-  const context = useContext(submitDataContext);
   const userInfoContext = useContext(userContext);
   const { userInfo } = userInfoContext.state;
-  const { postData } = context.state;
-  const { title, posting_content, hashtag } = postData;
-  const { setPostData } = context.actions;
   const hashRef = useRef(null);
   const [tempPostData, setTempPostData] = useState({
     title: "",
@@ -167,9 +162,9 @@ const postEditHandler = () => {
   }, []);
 
   useEffect(() => {
-    if (!hashtag.length) return;
+    if (!tempPostData.hashtag.length) return;
     hashRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [hashtag]);
+  }, [tempPostData.hashtag]);
   return (
     <WhiteBackground>
       <Helmet>

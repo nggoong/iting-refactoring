@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { submitDataContext } from '../../context/SubmitDataProvider';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
@@ -8,9 +7,6 @@ import Stack from '@mui/material/Stack';
 const DeletableBadge = ({ children, idx, hashtag, data, setHashtag }) => {
     const location = useLocation();
     const pathname = location.pathname;
-    const context = useContext(submitDataContext);
-    const { postData } = context.state;
-    const { setPostData } = context.actions;
 
     const handleDelete = () => {
         let tempHashtag;
