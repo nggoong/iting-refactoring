@@ -238,7 +238,7 @@ const postEditHandler = () => {
           </HashTagForm>
           <HashtagViewer ref={hashRef}>
             {tempPostData.hashtag.map((tag, index) => (
-              <DeletableBadge key={index} idx={index} hashtag={tempPostData.hashtag} data={tempPostData} setData={setTempPostData}>
+              <DeletableBadge key={index} idx={index} hashtag={tempPostData.hashtag} data={tempPostData} setHashtag={setTempPostData}>
                 {tag}
               </DeletableBadge>
             ))}

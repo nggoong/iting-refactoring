@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
 
-const DeletableBadge = ({ children, idx, hashtag, setHashtag }) => {
+const DeletableBadge = ({ children, idx, hashtag, data, setHashtag }) => {
     const location = useLocation();
     const pathname = location.pathname;
     const context = useContext(submitDataContext);
@@ -22,7 +22,7 @@ const DeletableBadge = ({ children, idx, hashtag, setHashtag }) => {
         else {
           tempHashtag = [...hashtag];
           tempHashtag.splice(idx, 1);
-          setPostData({...postData, hashtag:[...tempHashtag]});
+          setHashtag({...data, hashtag:[...tempHashtag]});
         }
        
       };
