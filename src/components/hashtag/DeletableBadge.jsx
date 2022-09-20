@@ -20,7 +20,7 @@ const DeletableBadge = ({ children, idx, hashtag, setHashtag }) => {
           setHashtag(tempHashtag);
         }
         else {
-          tempHashtag = [...postData.hashtag];
+          tempHashtag = [...hashtag];
           tempHashtag.splice(idx, 1);
           setPostData({...postData, hashtag:[...tempHashtag]});
         }

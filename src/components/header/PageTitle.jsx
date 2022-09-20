@@ -8,7 +8,7 @@ import { postingsAPI } from '../../shared/api';
 import { AiOutlinePlus } from 'react-icons/ai';
 
 
-const PageTitle = ({ title, isAction }) => {
+const PageTitle = ({ title, isAction, postActions }) => {
     const queryClient = useQueryClient();
     const location = useLocation();
     const navigate = useNavigate();
@@ -17,34 +17,34 @@ const PageTitle = ({ title, isAction }) => {
     
     const context = useContext(submitDataContext);
     
-    const { mutate:submitPosting, isError:mutateError } = useMutation(postingsAPI.postPosting, {
-        onSuccess: async () => {
-            await queryClient.invalidateQueries(["postings"]);
-            return navigate("/viewer/posting/list");
-        },
-        onError: (err) => {
-            if(err.response.status === 401) return;
-            alert("게시글을 등록하지 못했습니다.");
-            navigate("/viewer/posting/list");
-        }
-    });
-    const postSubmitHandler = () => {
-        //TODO: useMutation 사용해서 글 작성
-        const {title, posting_content, hashtag} = context.state.postData;
-        if(!title || !posting_content) {
-            alert("제목과 내용을 모두 채워주세요!");
-            return;
-        }
-        const newData = {
-            title,
-            posting_content,
-            hashtag,
-            // imgUrl:'shdlfl' // TODO: 지우기
-        }
-        submitPosting(newData);
-        // navigate("/viewer/posting/list");
-        // return queryClient.invalidateQueries(["postings"]);
-    }
+    // const { mutate:submitPosting, isError:mutateError } = useMutation(postingsAPI.postPosting, {
+    //     onSuccess: async () => {
+    //         await queryClient.invalidateQueries(["postings"]);
+    //         return navigate("/viewer/posting/list");
+    //     },
+    //     onError: (err) => {
+    //         if(err.response.status === 401) return;
+    //         alert("게시글을 등록하지 못했습니다.");
+    //         navigate("/viewer/posting/list");
+    //     }
+    // });
+    // const postSubmitHandler = () => {
+    //     //TODO: useMutation 사용해서 글 작성
+    //     const {title, posting_content, hashtag} = context.state.postData;
+    //     if(!title || !posting_content) {
+    //         alert("제목과 내용을 모두 채워주세요!");
+    //         return;
+    //     }
+    //     const newData = {
+    //         title,
+    //         posting_content,
+    //         hashtag,
+    //         // imgUrl:'shdlfl' // TODO: 지우기
+    //     }
+    //     submitPosting(newData);
+    //     // navigate("/viewer/posting/list");
+    //     // return queryClient.invalidateQueries(["postings"]);
+    // }
 
     const postEditNavigateHandler = () => {
         navigate(`/posting/edit/${postingId}`);  
@@ -68,28 +68,28 @@ const PageTitle = ({ title, isAction }) => {
     }
     };
 
-    const { mutate:submitEditing } = useMutation(postingsAPI.postEditing, {
-        onSuccess: async () => {
-            alert("게시글이 수정되었습니다.");
-            await queryClient.invalidateQueries(["postings"]);
-            return navigate(`/detail/posting/${postingId}`);
-        },
-        onError: (err) => {
-            if(err.response.status === 401) return;
-            alert("게시글을 수정하지 못했습니다.");
-            navigate("/viewer/posting/list");
-        }
-    });
-    const postEditHandler = () => {
-        const {title, posting_content, hashtag} = context.state.postData;
-        const newData = {
-            title,
-            posting_content,
-            hashtag,
-            // imgUrl:'shdlfl'
-        }
-        submitEditing({postingId, newData});
-    }
+    // const { mutate:submitEditing } = useMutation(postingsAPI.postEditing, {
+    //     onSuccess: async () => {
+    //         alert("게시글이 수정되었습니다.");
+    //         await queryClient.invalidateQueries(["postings"]);
+    //         return navigate(`/detail/posting/${postingId}`);
+    //     },
+    //     onError: (err) => {
+    //         if(err.response.status === 401) return;
+    //         alert("게시글을 수정하지 못했습니다.");
+    //         navigate("/viewer/posting/list");
+    //     }
+    // });
+    // const postEditHandler = () => {
+    //     const {title, posting_content, hashtag} = context.state.postData;
+    //     const newData = {
+    //         title,
+    //         posting_content,
+    //         hashtag,
+    //         // imgUrl:'shdlfl'
+    //     }
+    //     submitEditing({postingId, newData});
+    // }
 
     const backBtnHandler = () => {
         if (pathname===`/detail/posting/${postingId}`) {
@@ -103,7 +103,7 @@ const PageTitle = ({ title, isAction }) => {
 
 
     
-    if(mutateError) return <p>error</p>
+    // if(mutateError) return <p>error</p>
     if(pathname === '/viewer/posting/list' || pathname.includes('/viewer/posting/search')) return <PageTitleEmpty/>;
     return(
         <PageTitleWrapper>
@@ -114,9 +114,9 @@ const PageTitle = ({ title, isAction }) => {
                     {pathname==="/viewer/posting/mypostings"? "내가 쓴 글":`${title}`}
                 </p>
                 <HeaderActions isShow={isAction}>
-                    {pathname==="/posting" && <p onClick={postSubmitHandler}>등록</p>}
+                    {pathname==="/posting" && <p onClick={postActions}>등록</p>}
                     {pathname===`/detail/posting/${postingId}` && <><p onClick={postEditNavigateHandler}>수정</p><p onClick={postDeleteHandler}>삭제</p></>}
-                    {pathname===`/posting/edit/${postingId}` && <p onClick={postEditHandler}>수정</p>}
+                    {pathname===`/posting/edit/${postingId}` && <p onClick={postActions}>수정</p>}
                     {pathname==="/viewer/room" && <p style={{fontSize:"25px", color:"black"}} onClick={()=> navigate("/create/room")}><AiOutlinePlus/></p>}
                     {/* TODO: action이 필요한 페이지의 케이스를 위와 같이 다룸 */}
                 </HeaderActions>

@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import Search from './Search';
 import PageTitle from './PageTitle';
 
-const Header = ({ title, isAction}) => {
+const Header = ({ title, isAction, postActions }) => {
 
 
     return(
         <HeaderWrapper>
-            <PageTitle title={title} isAction={isAction}></PageTitle>
+            <PageTitle title={title} isAction={isAction} postActions={postActions}></PageTitle>
             <Search></Search>
         </HeaderWrapper>
     )
