@@ -194,12 +194,7 @@ const Signup = () => {
 
 				<p>비밀번호</p>
 				<PwBox>
-					<input
-						type="password"
-						placeholder="영문/숫자 8-20자, 특수문자(!@#$%^&.*)포함 "
-						ref={pw_ref}
-						onChange={pwCheck}
-					/>
+					<input type="password" placeholder="영문/숫자 8-20자, 특수문자(!@#$%^&.*)포함 " ref={pw_ref} onChange={pwCheck} />
 					{pwcheck == null ? (
 						<None />
 					) : pwcheck ? (

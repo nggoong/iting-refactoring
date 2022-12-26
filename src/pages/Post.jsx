@@ -172,9 +172,7 @@ const Post = () => {
 			</Helmet>
 			<PostWrapper>
 				{pathname === '/posting' && <Header title="글쓰기" isAction={true} postActions={postSubmitHandler} />}
-				{pathname === `/posting/edit/${postingId}` && (
-					<Header title="수정하기" isAction={true} postActions={postEditHandler} />
-				)}
+				{pathname === `/posting/edit/${postingId}` && <Header title="수정하기" isAction={true} postActions={postEditHandler} />}
 
 				<PostContent>
 					<input
@@ -224,13 +222,7 @@ const Post = () => {
 					</HashTagForm>
 					<HashtagViewer ref={hashRef}>
 						{postData.hashtag.map((tag, index) => (
-							<DeletableBadge
-								key={index}
-								idx={index}
-								hashtag={postData.hashtag}
-								data={postData}
-								setHashtag={setPostData}
-							>
+							<DeletableBadge key={index} idx={index} hashtag={postData.hashtag} data={postData} setHashtag={setPostData}>
 								{tag}
 							</DeletableBadge>
 						))}

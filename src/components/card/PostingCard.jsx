@@ -44,10 +44,7 @@ const PostingCard = ({ post }) => {
 						<IoChatboxEllipsesOutline />
 						{post.comment_count}
 					</p>
-					<p
-						className="posting-actions-icon-wrapper posting-actions-icon-like"
-						style={{ color: isLike ? '#3549FF' : null }}
-					>
+					<p className="posting-actions-icon-wrapper posting-actions-icon-like" style={{ color: isLike ? '#3549FF' : null }}>
 						<AiOutlineLike />
 						{post.like_count}
 					</p>

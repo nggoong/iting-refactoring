@@ -31,7 +31,6 @@ const CommentInPost = React.lazy(() => import('./pages/CommentInPost'));
 function App() {
 	const context = useContext(userContext);
 	const location = useLocation();
-	const access = context.state.userInfo.username;
 	const { setUserInfo } = context.actions;
 	const token = sessionStorage.getItem('Authorization');
 
@@ -80,10 +79,7 @@ function App() {
 								path="/viewer/room/search/:hashtag"
 								element={<PrivateRoute component={<RoomViewer />} authenticated={token} />}
 							/>
-							<Route
-								path="/detail/posting/:postingId"
-								element={<PrivateRoute component={<Detail />} authenticated={token} />}
-							/>
+							<Route path="/detail/posting/:postingId" element={<PrivateRoute component={<Detail />} authenticated={token} />} />
 							<Route path="/signup" element={<Signup />}></Route>
 
 							<Route path="/mypage/myinfomanage" element={<MyInfoManage />} />
@@ -94,15 +90,9 @@ function App() {
 
 							<Route path="/oauth2/redirect/:token" element={<KakaoLogin />} />
 							<Route path="/posting" element={<PrivateRoute component={<Post />} authenticated={token} />} />
-							<Route
-								path="/posting/edit/:postingId"
-								element={<PrivateRoute component={<Post />} authenticated={token} />}
-							/>
+							<Route path="/posting/edit/:postingId" element={<PrivateRoute component={<Post />} authenticated={token} />} />
 							<Route path="/create/room" element={<PrivateRoute component={<CreateRoom />} authenticated={token} />} />
-							<Route
-								path="/detail/room/chat/:roomId"
-								element={<PrivateRoute component={<ChatRoom />} authenticated={token} />}
-							/>
+							<Route path="/detail/room/chat/:roomId" element={<PrivateRoute component={<ChatRoom />} authenticated={token} />} />
 							<Route path="*" element={<ErrorFound title={'NOT FOUND'} text={'페이지를 찾지 못했어요!'} />} />
 						</Routes>
 					</AnimatePresence>
