@@ -11,7 +11,7 @@
 		"ecmaVersion": "latest",
 		"sourceType": "module"
 	},
-	"plugins": ["react", "jest"],
+	"plugins": ["react", "jest", "import"],
 	"rules": {
 		"react/react-in-jsx-scope": "off",
 		"no-var": "error",
