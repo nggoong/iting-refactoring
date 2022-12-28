@@ -1,10 +1,9 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { userContext } from '../../context/UserProvider';
 import AutoCompleteCard from '../card/AutoCompleteCard';
 import { chatroomAPI, postingsAPI } from '../../shared/api';
-import _ from 'lodash';
 
 const Search = () => {
 	const [completedList, setCompletedList] = useState([]);
@@ -14,46 +13,26 @@ const Search = () => {
 	const context = useContext(userContext);
 	const { username } = context.state.userInfo;
 	const [searchInput, setSearchInput] = useState('');
+	const timerRef = useRef(null);
 
-	const searchPostDebounce = useMemo(
-		() =>
-			_.debounce((value) => {
-				postingsAPI
-					.fetchAutoCompletePostingList(value)
-					.then((res) => {
-						setCompletedList(res.data);
-					})
-					.catch((err) => {
-						if (err.response && err.response.status === 500) {
-							alert('로그인이 필요합니다.');
-							setSearchInput('');
-							navigate('/login');
-							return;
-						}
-					});
-			}, 400),
-		[completedList]
-	);
-
-	const searchRoomDebounce = useMemo(
-		() =>
-			_.debounce((value) => {
-				chatroomAPI
-					.fetchAutoCompleteRoomList(value)
-					.then((res) => {
-						setCompletedList(res.data);
-					})
-					.catch((err) => {
-						if (err.response && err.response.status === 500) {
-							alert('로그인이 필요합니다.');
-							setSearchInput('');
-							navigate('/login');
-							return;
-						}
-					});
-			}, 400),
-		[completedList]
-	);
+	const debounceCompletedSearch = (callback, value) => {
+		if (timerRef.current) {
+			clearTimeout(timerRef.current);
+		}
+		timerRef.current = setTimeout(async () => {
+			try {
+				const res = await callback(value);
+				setCompletedList(res.data);
+			} catch (err) {
+				if (err.response && err.response.status === 500) {
+					alert('로그인이 필요합니다.');
+					setSearchInput('');
+					navigate('/login');
+					return;
+				}
+			}
+		}, 400);
+	};
 
 	const searchChangeHandler = async (e) => {
 		setSearchInput(e.target.value);
@@ -63,10 +42,10 @@ const Search = () => {
 		} else {
 			if (!username) return;
 			else {
-				if (pathname.includes('/viewer/room')) {
-					searchRoomDebounce(e.target.value);
-				} else if (pathname.includes('/viewer/posting')) {
-					searchPostDebounce(e.target.value);
+				if (pathname.includes('/viewer/posting')) {
+					debounceCompletedSearch(postingsAPI.fetchAutoCompletePostingList, e.target.value);
+				} else if (pathname.includes('/viewer/room')) {
+					debounceCompletedSearch(chatroomAPI.fetchAutoCompleteRoomList, e.target.value);
 				}
 			}
 		}
