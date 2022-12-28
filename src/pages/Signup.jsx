@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import instance from '../shared/axios';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,10 +8,10 @@ const Signup = () => {
 	const navigate = useNavigate();
 
 	//ref로 input값 받아오기
-	const email_ref = React.useRef(null);
-	const nickname_ref = React.useRef(null);
-	const pw_ref = React.useRef(null);
-	const pwcheck_ref = React.useRef(null);
+	const email_ref = useRef(null);
+	const nickname_ref = useRef(null);
+	const pw_ref = useRef(null);
+	const pwcheck_ref = useRef(null);
 
 	//input값 제한 조건 충족에 따른 p태그 반환
 	const [emailcheck, setEmailCheck] = useState(null);
@@ -84,13 +84,13 @@ const Signup = () => {
 	};
 
 	const submitId = async () => {
-		if (emailcheck == null) {
+		if (emailcheck === null) {
 			alert('ID를 입력해주세요!');
 		} else if (emailcheck === false) {
 			alert('ID 형식을 확인해주세요!');
 		} else {
 			try {
-				const res = await instance.get(`/api/users/email/${email_ref.current.value}`);
+				await instance.get(`/api/users/email/${email_ref.current.value}`);
 				alert('사용 가능한 ID 입니다!');
 				setIdDuple(true);
 			} catch (err) {
@@ -108,7 +108,7 @@ const Signup = () => {
 			alert('닉네임 형식을 확인해주세요!');
 		} else {
 			try {
-				const res = await instance.get(`/api/users/nickname/${nickname_ref.current.value}`);
+				await instance.get(`/api/users/nickname/${nickname_ref.current.value}`);
 				alert('사용 가능한 닉네임 입니다!');
 				setNickNameDuple(true);
 			} catch (err) {
@@ -137,9 +137,7 @@ const Signup = () => {
 			alert('닉네임 확인이 필요해요!');
 		}
 
-		//회원가입 성공시 db는 서버로 보내고 알럿띄우고 login 페이지로 이동
 		if (emailcheck && nicknamecheck && pwcheck && pwrecheck && userType && idduple && nicknameduple) {
-			//보내줄 데이터 모아서 변수에 담기!
 			const user_data = {
 				username: email_ref.current.value,
 				nickname: nickname_ref.current.value,
@@ -149,7 +147,7 @@ const Signup = () => {
 			};
 
 			try {
-				const res = await instance.post('/api/signup', user_data);
+				await instance.post('/api/signup', user_data);
 				alert('회원가입이 완료되었습니다!');
 				navigate('/login');
 			} catch (err) {
@@ -173,7 +171,7 @@ const Signup = () => {
 					<>
 						<input placeholder="이메일 형식" ref={email_ref} onChange={idCheck} />
 						<button
-							className={emailcheck == null ? 'btnstart' : emailcheck ? '' : 'btnfalse'}
+							className={emailcheck === null ? 'btnstart' : emailcheck ? '' : 'btnfalse'}
 							disabled={emailcheck ? false : true}
 							onClick={submitId}
 						>
@@ -181,7 +179,7 @@ const Signup = () => {
 							중복 확인
 						</button>
 					</>
-					{emailcheck == null ? (
+					{emailcheck === null ? (
 						<None />
 					) : emailcheck ? (
 						<None />
@@ -195,7 +193,7 @@ const Signup = () => {
 				<p>비밀번호</p>
 				<PwBox>
 					<input type="password" placeholder="영문/숫자 8-20자, 특수문자(!@#$%^&.*)포함 " ref={pw_ref} onChange={pwCheck} />
-					{pwcheck == null ? (
+					{pwcheck === null ? (
 						<None />
 					) : pwcheck ? (
 						<None />
@@ -205,7 +203,7 @@ const Signup = () => {
 						</Fail>
 					)}
 					<input type="password" placeholder="비밀번호 확인" ref={pwcheck_ref} onChange={pwReCheck} />
-					{pwrecheck == null ? (
+					{pwrecheck === null ? (
 						<None />
 					) : pwrecheck ? (
 						<None />
@@ -220,7 +218,7 @@ const Signup = () => {
 				<NicknameBox>
 					<input placeholder="한글/영문/숫자, 2-10자리 이하" ref={nickname_ref} onChange={nickNameCheck} />
 					<button
-						className={nicknamecheck == null ? 'btnstart' : nicknamecheck ? '' : 'btnfalse'}
+						className={nicknamecheck === null ? 'btnstart' : nicknamecheck ? '' : 'btnfalse'}
 						disabled={nicknamecheck ? false : true}
 						onClick={submitNickName}
 					>
@@ -228,7 +226,7 @@ const Signup = () => {
 						중복 확인
 					</button>
 				</NicknameBox>
-				{nicknamecheck == null ? (
+				{nicknamecheck === null ? (
 					<None />
 				) : nicknamecheck ? (
 					<None />

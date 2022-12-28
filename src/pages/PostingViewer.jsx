@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { postingsAPI } from '../shared/api';
 import styled from 'styled-components';

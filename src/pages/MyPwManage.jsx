@@ -59,7 +59,7 @@ const MyPwManage = () => {
 			confirmChangePassword: newConfirmPw_ref.current.value
 		};
 		try {
-			const res = await instance.put('/api/mypage/user/password', data);
+			await instance.put('/api/mypage/user/password', data);
 			alert('비밀번호를 변경하였습니다.');
 			navigate('/mypage');
 		} catch (err) {
@@ -98,7 +98,7 @@ const MyPwManage = () => {
 						autoComplete="off"
 						onBlur={pwCheck}
 					></input>
-					{pwcheck == null ? (
+					{pwcheck === null ? (
 						<None />
 					) : pwcheck ? (
 						<None />
@@ -115,7 +115,7 @@ const MyPwManage = () => {
 						autoComplete="off"
 						onBlur={pwReCheck}
 					></input>
-					{pwrecheck == null ? (
+					{pwrecheck === null ? (
 						<None />
 					) : pwrecheck ? (
 						<None />

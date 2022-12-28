@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../components/header/Header';
 import RoomCard from '../components/card/RoomCard';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { chatroomAPI } from '../shared/api';
 
@@ -16,7 +16,6 @@ import ErrorFound from '../components/notice/NotFound';
 const RoomViewer = () => {
 	const paramHashtag = useParams().hashtag;
 	const { ref, inView } = useInView();
-	const navigate = useNavigate();
 
 	const {
 		data: listData,

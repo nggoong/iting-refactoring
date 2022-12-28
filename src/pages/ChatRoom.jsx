@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import * as StompJS from 'stompjs';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { userContext } from '../context/UserProvider';
 import { chatroomAPI } from '../shared/api';
 import { Helmet } from 'react-helmet';
 
@@ -22,16 +21,12 @@ const ChatRoom = () => {
 
 	const queryClient = useQueryClient();
 
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
-
 	const navigate = useNavigate();
 	const { state: navigateState } = useLocation();
 	const roomId = useParams().roomId;
 
 	const sock = new SockJS(`${process.env.REACT_APP_API_URL}/iting`);
 	const client = StompJS.over(sock);
-	// client.reconnect_delay = 5000;
 	client.debug = null;
 	const headers = {};
 

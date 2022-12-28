@@ -53,10 +53,3 @@ const LoadingWrapper = styled.div`
 	left: 50%;
 	transform: translate(-50%, 0);
 `;
-
-const LogoDiv = styled.div`
-	width: 140px;
-	height: 90px;
-	background-position: cover;
-	background-size: 140px 90px;
-`;

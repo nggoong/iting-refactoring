@@ -4,7 +4,6 @@ import { postingsAPI } from '../shared/api';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import Loading from '../components/loading/Loading';
-import Notice from '../components/notice/Notice';
 import { Helmet } from 'react-helmet';
 import Header from '../components/header/Header';
 import CommentInPostCard from '../components/card/CommentInPostCard';
@@ -27,8 +26,6 @@ const CommentInPost = () => {
 			fetchNextPage();
 		}
 	}, [inView]);
-
-	// console.log(data.pages[0].posts);
 
 	return (
 		<CommentInPostWrapper>

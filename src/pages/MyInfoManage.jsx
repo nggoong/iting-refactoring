@@ -42,13 +42,11 @@ const MyInfoManage = () => {
 
 	const nicknameCheckHandler = async () => {
 		try {
-			const res = await instance.get(`/api/users/nickname/${nickname_ref.current.value}`);
-			// console.log(res);
+			await instance.get(`/api/users/nickname/${nickname_ref.current.value}`);
 			setNicknameCheck(true);
 			setNicknameState(true);
 			alert('사용 가능한 닉네임입니다.');
 		} catch (err) {
-			// console.log(err);
 			setNicknameCheck(false);
 			setNicknameState(false);
 			alert(err.response.data);
@@ -69,7 +67,7 @@ const MyInfoManage = () => {
 			user_type: usertype_ref.current.value
 		};
 		try {
-			const res = await instance.put('/api/mypage/user/info', data);
+			await instance.put('/api/mypage/user/info', data);
 			alert('개인정보가 변경되었습니다.');
 			const { nickname, user_type } = data;
 			const { username, kakao } = userInfo;
