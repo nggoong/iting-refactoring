@@ -18,6 +18,7 @@
 		"no-unused-vars": ["error", { "args": "none" }],
 		"eqeqeq": "error",
 		"no-console": "off",
-		"react/prop-types": "off"
+		"react/prop-types": "off",
+		"no-extra-boolean-cast": 0
 	}
 }
