@@ -20,14 +20,13 @@ instance.interceptors.response.use(
 	(res) => {
 		return res;
 	},
-	(err) => {
+	async (err) => {
 		if (err.response && err.response.status === 401) {
 			const refreshToken = sessionStorage.getItem('Refresh__Token');
 			const prevAccessToken = sessionStorage.getItem('Authorization');
 			const originRequest = err.config; // 원래의 요청
-
-			return axios
-				.put(
+			try {
+				const res = await axios.put(
 					`${process.env.REACT_APP_API_URL}/api/refreshToken`,
 					{},
 					{
@@ -36,25 +35,23 @@ instance.interceptors.response.use(
 							RefreshToken: refreshToken
 						}
 					}
-				)
-				.then((res) => {
-					const newAccessToken = res.headers.authorization;
-					sessionStorage.setItem('Authorization', newAccessToken);
-					originRequest.headers.Authorization = newAccessToken;
+				);
+				const newAccessToken = res.headers.authorization;
+				sessionStorage.setItem('Authorization', newAccessToken);
+				originRequest.headers.Authorization = newAccessToken;
 
-					return instance.request(originRequest).catch((e) => {
-						alert('세션이 만료되었습니다.');
-						console.log(e);
-						window.location.href = '/login';
-					}); // 원래의 요청으로 다시 요청
-				})
-				.catch((err) => {
+				return instance.request(originRequest).catch((err) => {
 					alert('세션이 만료되었습니다.');
-					sessionStorage.removeItem('Authorization');
+					console.log(err);
 					window.location.href = '/login';
 				});
+			} catch (err) {
+				alert('세션이 만료되었습니다.');
+				sessionStorage.removeItem('Authorization');
+				window.location.href = '/login';
+			}
+			return Promise.reject(err);
 		}
-		return Promise.reject(err);
 	}
 );
 
