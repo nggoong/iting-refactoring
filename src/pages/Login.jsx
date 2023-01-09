@@ -48,6 +48,12 @@ const Login = () => {
 
 	return (
 		<LoginWrapper>
+			<Helmet>
+				<title>IT-ing</title>
+				<link rel="apple-touch-icon" sizes="180x180" href="180.ico" />
+				<link rel="icon" type="image/png" sizes="32x32" href="32.ico" />
+				<link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
+			</Helmet>
 			<Logo onClick={() => navigate('/viewer/posting/list')}>
 				<svg width="99" height="57" viewBox="0 0 99 57" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<g clipPath="url(#clip0_833_4252)">
@@ -79,13 +85,6 @@ const Login = () => {
 					</defs>
 				</svg>
 			</Logo>
-
-			<Helmet>
-				<title>IT-ing</title>
-				<link rel="apple-touch-icon" sizes="180x180" href="180.ico" />
-				<link rel="icon" type="image/png" sizes="32x32" href="32.ico" />
-				<link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
-			</Helmet>
 
 			<Inputarea>
 				<input placeholder="ID" ref={email_ref} type="email" />
