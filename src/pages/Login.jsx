@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components';
 import instance from '../shared/axios';
 import kakao_login from '../assets/images/kakao_login.png';
@@ -8,8 +8,8 @@ import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
 
 const Login = () => {
-	const email_ref = React.useRef(null);
-	const pw_ref = React.useRef(null);
+	const email_ref = useRef(null);
+	const pw_ref = useRef(null);
 
 	const navigate = useNavigate();
 
