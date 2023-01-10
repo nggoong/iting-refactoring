@@ -1,49 +1,44 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import instance from '../shared/axios';
 import kakao_login from '../assets/images/kakao_login.png';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { useForm } from 'react-hook-form';
 import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
 
 const Login = () => {
-	const email_ref = useRef(null);
-	const pw_ref = useRef(null);
+	const {
+		register,
+		handleSubmit,
+		formState: { isSubmitting }
+	} = useForm();
 
 	const navigate = useNavigate();
 
 	const context = useContext(userContext);
 	const { setUserInfo } = context.actions;
 
-	const submitLogin = async () => {
-		const login_data = {
-			username: email_ref.current.value,
-			password: pw_ref.current.value
-		};
-
-		//공란이면 알럿 띄우기
-		if (email_ref.current.value === '') {
-			alert('ID를 입력하세요!');
-		} else if (pw_ref.current.value === '') {
-			alert('패스워드를 입력하세요!');
-		} else {
-			try {
-				const res = await instance.post('/api/login', login_data);
-				const token = res.headers.authorization;
-				const refreshtoken = res.headers.refreshtoken;
-				const { username, nickname, user_type, kakao } = res.data;
-				const userData = { username, nickname, user_type, kakao };
-				setUserInfo(userData);
-				sessionStorage.setItem('Authorization', token);
-				sessionStorage.setItem('Refresh__Token', refreshtoken);
-				alert('환영합니다!');
-				navigate('/viewer/posting/list');
-			} catch (err) {
-				console.log(err);
-				alert('아이디 또는 패스워드를 확인해주세요!');
-			}
+	const onSubmitLogin = async (data) => {
+		try {
+			const res = await instance.post('/api/login', JSON.stringify(data));
+			const token = res.headers.authorization;
+			const refreshtoken = res.headers.refreshtoken;
+			const { username, nickname, user_type, kakao } = res.data;
+			const userData = { username, nickname, user_type, kakao };
+			setUserInfo(userData);
+			sessionStorage.setItem('Authorization', token);
+			sessionStorage.setItem('Refresh__Token', refreshtoken);
+			alert('환영합니다!');
+			navigate('/viewer/posting/list');
+		} catch (err) {
+			alert('아이디 또는 패스워드를 확인해주세요!');
 		}
+	};
+
+	const onSubmitError = (errors) => {
+		if (errors.username) alert(errors.username.message);
+		else if (errors.password) alert(errors.password.message);
 	};
 
 	return (
@@ -86,14 +81,31 @@ const Login = () => {
 				</svg>
 			</Logo>
 
-			<Inputarea>
-				<input placeholder="ID" ref={email_ref} type="email" />
-				<input placeholder="PW" ref={pw_ref} type="password" />
-			</Inputarea>
-			<Buttonarea>
-				<button className="btn-login" onClick={submitLogin}>
+			<Inputarea onSubmit={handleSubmit(onSubmitLogin, onSubmitError)}>
+				<input
+					placeholder="EMAIL"
+					name="EMAIL"
+					{...register('username', {
+						required: '이메일을 입력해주세요!',
+						pattern: {
+							value: /\S+@\S+\.\S+/,
+							message: '이메일 형식이 아닙니다.'
+						}
+					})}
+				/>
+				<input
+					placeholder="PW"
+					type="password"
+					name="PW"
+					{...register('password', {
+						required: '비밀번호를 입력해주세요!'
+					})}
+				/>
+				<button type="submit" className="btn-login" disabled={isSubmitting}>
 					로그인
 				</button>
+			</Inputarea>
+			<Buttonarea>
 				<a rel="noreferrer" href="https://api.it-ing.co.kr/oauth2/authorization/kakao">
 					<button type="button" className="btn-kakao">
 						<img src={kakao_login} alt="" />
@@ -117,20 +129,16 @@ const LoginWrapper = styled.div`
 	background-color: #ffffff;
 	display: flex;
 	flex-direction: column;
-	/* justify-content: space-between; */
 	align-items: center;
 	height: calc(100vh - 80px);
 
 	input {
 		margin-bottom: 20px;
 		box-sizing: border-box;
-
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		padding: 16px;
-		/* gap: 4px; */
-
 		width: 327px;
 		height: 58px;
 		left: 24px;
@@ -149,28 +157,16 @@ const Logo = styled.div`
 	cursor: pointer;
 `;
 
-const Inputarea = styled.div`
+const Inputarea = styled.form`
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 38px;
-`;
-
-const Buttonarea = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 
 	.btn-login {
-		justify-content: center;
-		padding: 18px 0px;
-
-		width: 335px;
-		height: 60px;
-
 		background: #3549ff;
+		height: 60px;
 		border-radius: 40px;
 		border: none;
-
 		font-family: 'Apple SD Gothic Neo';
 		font-style: normal;
 		font-size: 20px;
@@ -179,6 +175,12 @@ const Buttonarea = styled.div`
 		letter-spacing: -0.3px;
 		color: #ffffff;
 	}
+`;
+
+const Buttonarea = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
 	.btn-kakao {
 		margin-top: 50px;
