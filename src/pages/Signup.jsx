@@ -77,27 +77,25 @@ const Signup = () => {
 			<SingupContent onSubmit={handleSubmit(onSubmitSignup)}>
 				<p>아이디</p>
 				<IdBox>
-					<>
-						<input
-							placeholder="이메일 형식"
-							name="username"
-							{...register('username', {
-								required: '이메일 입력은 필수입니다.',
-								pattern: {
-									value: /\S+@\S+\.\S+/,
-									message: '이메일 형식에 맞지 않습니다.'
-								}
-							})}
-						/>
-						<button
-							className={!errors.username ? 'btnstart' : 'btnfalse'}
-							disabled={errors.username ? true : false}
-							onClick={submitId}
-						>
-							{' '}
-							중복 확인
-						</button>
-					</>
+					<input
+						placeholder="이메일 형식"
+						name="username"
+						{...register('username', {
+							required: '이메일 입력은 필수입니다.',
+							pattern: {
+								value: /\S+@\S+\.\S+/,
+								message: '이메일 형식에 맞지 않습니다.'
+							}
+						})}
+					/>
+					<button
+						className={!errors.username ? 'btnstart' : 'btnfalse'}
+						disabled={errors.username ? true : false}
+						onClick={submitId}
+					>
+						{' '}
+						중복 확인
+					</button>
 					{errors.username && <Fail role="alert">{errors.username.message}</Fail>}
 				</IdBox>
 
