@@ -42,9 +42,9 @@ const MyInfoManage = () => {
 			await instance.put('/api/mypage/user/info', data, {
 				headers: { 'Content-Type': `application/json` }
 			});
-			alert('개인정보 변경에 성공하였습니다.');
 			const userData = { ...userInfo, ...data };
 			setUserInfo(userData);
+			alert('개인정보 변경에 성공하였습니다.');
 			navigate('/mypage');
 		} catch (err) {
 			alert('개인정보 변경에 실패하였습니다.');
@@ -112,7 +112,7 @@ const MyInfoManage = () => {
 						<option value="SENIOR">시니어</option>
 					</select>
 				</UserTypeBox>
-				<ChangeMyInfoBtn onClick={myInfoChangeHandler} disabled={!changeBtnState || isSubmitting}>
+				<ChangeMyInfoBtn disabled={!changeBtnState || isSubmitting} type="submit">
 					{' '}
 					변경하기{' '}
 				</ChangeMyInfoBtn>
