@@ -39,15 +39,15 @@ const MyInfoManage = () => {
 
 	const myInfoChangeHandler = async (data) => {
 		try {
-			const res = await instance.put('/api/mypage/user/info', data, {
+			await instance.put('/api/mypage/user/info', data, {
 				headers: { 'Content-Type': `application/json` }
 			});
-			alert(res.data);
-			const userData = { ...userInfo, ...Object(data) };
+			alert('개인정보 변경에 성공하였습니다.');
+			const userData = { ...userInfo, ...data };
 			setUserInfo(userData);
 			navigate('/mypage');
 		} catch (err) {
-			console.log('실패', err);
+			alert('개인정보 변경에 실패하였습니다.');
 		}
 	};
 
