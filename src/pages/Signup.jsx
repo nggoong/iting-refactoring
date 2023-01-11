@@ -55,8 +55,9 @@ const Signup = () => {
 			alert('닉네임 확인이 필요해요!');
 			return;
 		}
+		console.log(data);
 		try {
-			await instance.post('/api/signup', JSON.stringify(data), {
+			await instance.post('/api/signup', data, {
 				headers: { 'Content-Type': `application/json` }
 			});
 			alert('회원가입이 완료되었습니다!');

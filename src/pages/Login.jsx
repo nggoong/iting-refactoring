@@ -21,7 +21,7 @@ const Login = () => {
 
 	const onSubmitLogin = async (data) => {
 		try {
-			const res = await instance.post('/api/login', JSON.stringify(data));
+			const res = await instance.post('/api/login', data);
 			const token = res.headers.authorization;
 			const refreshtoken = res.headers.refreshtoken;
 			const { username, nickname, user_type, kakao } = res.data;
