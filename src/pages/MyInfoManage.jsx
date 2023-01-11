@@ -39,13 +39,11 @@ const MyInfoManage = () => {
 
 	const myInfoChangeHandler = async (data) => {
 		try {
-			const res = await instance.put('/api/mypage/user/info', JSON.stringify(data), {
+			const res = await instance.put('/api/mypage/user/info', data, {
 				headers: { 'Content-Type': `application/json` }
 			});
 			alert(res.data);
-			console.log(Object(data));
-			const userData = {...Object(data), ...userInfo.user};
-			console.log("userData : ", userData);
+			const userData = { ...userInfo, ...Object(data) };
 			setUserInfo(userData);
 			navigate('/mypage');
 		} catch (err) {
