@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import instance from '../shared/axios';
@@ -6,72 +6,46 @@ import instance from '../shared/axios';
 import Header from '../components/header/Header';
 import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
+import { useForm } from 'react-hook-form';
 
 const MyInfoManage = () => {
 	const navigate = useNavigate();
 	const context = useContext(userContext);
 	const { userInfo } = context.state;
 	const { setUserInfo } = context.actions;
+	const {
+		register,
+		handleSubmit,
+		getValues,
+		formState: { isSubmitting, errors }
+	} = useForm({ mode: 'onChange' });
 
-	const [nicknameState, setNicknameState] = useState(true);
 	const [nicknameCheck, setNicknameCheck] = useState(false);
 	const [userTypeState, setUserTypeState] = useState(false);
 	const [dupCheckBtnState, setDupCheckBtnState] = useState(false);
 	const [changeBtnState, setChangeBtnState] = useState(false);
 
-	const _nickReg = /^[a-zA-Z0-9ㄱ-ㅎ가-힣]{2,10}$/;
-
-	const nickname_ref = useRef();
-	const usertype_ref = useRef();
-
-	const nicknameHandler = () => {
-		setNicknameState(false);
-		// 닉네임 정규식이 참이고, 빈값이 아니고, 기존닉네임에서 값이 바뀐 경우 중복확인 버튼 렌더링
-		if (
-			_nickReg.test(nickname_ref.current.value) &&
-			nickname_ref.current.value !== '' &&
-			nickname_ref.current.value !== userInfo.nickname
-		) {
-			setNicknameState(false);
-			return setDupCheckBtnState(true);
-		} else {
-			setNicknameState(true);
-			return setDupCheckBtnState(false);
-		}
-	};
-
 	const nicknameCheckHandler = async () => {
+		const { nickname } = getValues();
 		try {
-			await instance.get(`/api/users/nickname/${nickname_ref.current.value}`);
+			await instance.get(`/api/users/nickname/${nickname}`);
 			setNicknameCheck(true);
-			setNicknameState(true);
 			alert('사용 가능한 닉네임입니다.');
 		} catch (err) {
 			setNicknameCheck(false);
-			setNicknameState(false);
-			alert(err.response.data);
+			alert('사용 불가능한 닉네임입니다.');
 		}
 	};
 
-	const userTypeHandler = () => {
-		if (usertype_ref.current.value !== userInfo.user_type) {
-			return setUserTypeState(true);
-		} else {
-			return setUserTypeState(false);
-		}
-	};
-
-	const myInfoChangeHandler = async () => {
-		const data = {
-			nickname: nickname_ref.current.value,
-			user_type: usertype_ref.current.value
-		};
+	const myInfoChangeHandler = async (data) => {
 		try {
-			await instance.put('/api/mypage/user/info', data);
-			alert('개인정보가 변경되었습니다.');
-			const { nickname, user_type } = data;
-			const { username, kakao } = userInfo;
-			const userData = { username, nickname, user_type, kakao };
+			const res = await instance.put('/api/mypage/user/info', JSON.stringify(data), {
+				headers: { 'Content-Type': `application/json` }
+			});
+			alert(res.data);
+			console.log(Object(data));
+			const userData = {...Object(data), ...userInfo.user};
+			console.log("userData : ", userData);
 			setUserInfo(userData);
 			navigate('/mypage');
 		} catch (err) {
@@ -80,20 +54,10 @@ const MyInfoManage = () => {
 	};
 
 	useEffect(() => {
-		if (!_nickReg.test(nickname_ref.current.value)) {
-			return setChangeBtnState(false);
-		} else if (nicknameState && userTypeState) {
-			return setChangeBtnState(true);
-		} else if (!nicknameState && userTypeState) {
-			return setChangeBtnState(false);
-		} else if (!nicknameCheck && userTypeState) {
-			return setChangeBtnState(false);
-		} else if (nicknameCheck && userTypeState) {
-			return setChangeBtnState(true);
-		} else if (nicknameCheck && nicknameState) {
-			return setChangeBtnState(true);
-		}
-	}, [nicknameCheck, userTypeState, nicknameState]);
+		if (nicknameCheck) setChangeBtnState(true);
+		else if (!nicknameCheck && userTypeState) setChangeBtnState(true);
+		else setChangeBtnState(false);
+	}, [nicknameCheck, userTypeState]);
 
 	return (
 		<>
@@ -104,25 +68,53 @@ const MyInfoManage = () => {
 				<link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
 			</Helmet>
 			<Header title="개인정보 변경" isAction={true} />
-			<MyInfoWrapper>
+			<MyInfoWrapper onSubmit={handleSubmit(myInfoChangeHandler)}>
 				<NicknameBox>
 					<p>닉네임</p>
 					<NicknameInputBox>
-						<input ref={nickname_ref} defaultValue={userInfo.nickname} onChange={nicknameHandler}></input>
-						<NicknameCheckBtn onClick={nicknameCheckHandler} disabled={!dupCheckBtnState}>
+						<input
+							defaultValue={userInfo.nickname}
+							{...register('nickname', {
+								required: '닉네임은 필수 입력 사항입니다.',
+								pattern: {
+									value: /[a-zA-Z0-9ㄱ-ㅎ가-힣]$/,
+									message: '2자리 이상 10자리 이하 한글/영문/숫자가 필요합니다.'
+								},
+								minLength: {
+									value: 2,
+									message: '2자리 이상 10자리 이하로 입력해주세요.'
+								},
+								maxLength: {
+									value: 10,
+									message: '2자리 이상 10자리 이하로 입력해주세요.'
+								},
+								onChange: (e) => {
+									nicknameCheck && setNicknameCheck(false);
+									e.target.value === userInfo.nickname ? setDupCheckBtnState(false) : setDupCheckBtnState(true);
+								}
+							})}
+						></input>
+						<NicknameCheckBtn onClick={nicknameCheckHandler} disabled={!dupCheckBtnState || errors.nickname} type="button">
 							{' '}
 							중복 확인{' '}
 						</NicknameCheckBtn>
 					</NicknameInputBox>
 				</NicknameBox>
 				<UserTypeBox>
-					<select ref={usertype_ref} onChange={userTypeHandler} defaultValue={userInfo.user_type}>
+					<select
+						defaultValue={userInfo.user_type}
+						{...register('user_type', {
+							onChange: (e) => {
+								e.target.value === userInfo.user_type ? setUserTypeState(false) : setUserTypeState(true);
+							}
+						})}
+					>
 						<option value="SEEKER">취준생</option>
 						<option value="JUNIOR">주니어</option>
 						<option value="SENIOR">시니어</option>
 					</select>
 				</UserTypeBox>
-				<ChangeMyInfoBtn onClick={myInfoChangeHandler} disabled={!changeBtnState}>
+				<ChangeMyInfoBtn onClick={myInfoChangeHandler} disabled={!changeBtnState || isSubmitting}>
 					{' '}
 					변경하기{' '}
 				</ChangeMyInfoBtn>
@@ -133,7 +125,7 @@ const MyInfoManage = () => {
 
 export default MyInfoManage;
 
-const MyInfoWrapper = styled.div`
+const MyInfoWrapper = styled.form`
 	margin-top: 60px;
 	background: white;
 	width: 100%;
