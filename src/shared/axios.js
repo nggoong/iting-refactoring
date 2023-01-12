@@ -50,8 +50,8 @@ instance.interceptors.response.use(
 				sessionStorage.removeItem('Authorization');
 				window.location.href = '/login';
 			}
-			return Promise.reject(err);
 		}
+		return Promise.reject(err);
 	}
 );
 
