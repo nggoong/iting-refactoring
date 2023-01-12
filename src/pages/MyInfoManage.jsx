@@ -38,6 +38,10 @@ const MyInfoManage = () => {
 	};
 
 	const myInfoChangeHandler = async (data) => {
+		if (!nicknameCheck) {
+			alert('닉네임 중복 확인을 해주세요.');
+			return;
+		}
 		try {
 			await instance.put('/api/mypage/user/info', data, {
 				headers: { 'Content-Type': `application/json` }
@@ -52,8 +56,7 @@ const MyInfoManage = () => {
 	};
 
 	useEffect(() => {
-		if (nicknameCheck) setChangeBtnState(true);
-		else if (!nicknameCheck && userTypeState) setChangeBtnState(true);
+		if (nicknameCheck || userTypeState) setChangeBtnState(true);
 		else setChangeBtnState(false);
 	}, [nicknameCheck, userTypeState]);
 
