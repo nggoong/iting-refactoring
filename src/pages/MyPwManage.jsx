@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -6,65 +6,37 @@ import { userContext } from '../context/UserProvider';
 import Header from '../components/header/Header';
 import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
+import { useForm } from 'react-hook-form';
 
 const MyPwManage = () => {
-	const _pwcheck = /^(?=.*[!@#$%^&.*])[0-9a-zA-Z!@#$%^&.*]{8,20}$/;
-	const nowPw_ref = useRef();
-	const newPw_ref = useRef(null);
-	const newConfirmPw_ref = useRef(null);
+	const {
+		register,
+		handleSubmit,
+		getValues,
+		formState: { isSubmitting, errors }
+	} = useForm({
+		mode: 'onChange'
+	});
 	const navigate = useNavigate();
 
 	const context = useContext(userContext);
 	const { userInfo } = context.state;
+	const [isAbleSubmit, setIsAbleSubmit] = useState(false);
 
-	const [changeBtnState, setChangeBtnState] = useState(false);
-
-	const [pwcheck, setPwCheck] = useState(null);
-	const [pwrecheck, setPwReCheck] = useState(null);
-
-	//비밀번호 형식이 맞지 않을 경우
-	const pwCheck = () => {
-		if (!_pwcheck.test(newPw_ref.current.value)) {
-			setPwCheck(false);
-		} else {
-			setPwCheck(true);
-		}
-	};
-
-	// 유저 비밀번호 확인 일치 체크
-	const pwReCheck = () => {
-		if (newPw_ref.current.value !== newConfirmPw_ref.current.value) {
-			setPwReCheck(false);
-		} else {
-			setPwReCheck(true);
-		}
-	};
-
-	const pwCheckHandler = () => {
-		if (
-			_pwcheck.test(nowPw_ref.current.value) &&
-			_pwcheck.test(newPw_ref.current.value) &&
-			newPw_ref.current.value.length === newConfirmPw_ref.current.value.length
-		) {
-			return setChangeBtnState(true);
-		} else {
-			return setChangeBtnState(false);
-		}
-	};
-
-	const myPwChangeHandler = async () => {
-		const data = {
-			password: nowPw_ref.current.value,
-			changePassword: newPw_ref.current.value,
-			confirmChangePassword: newConfirmPw_ref.current.value
-		};
+	const myPwChangeHandler = async (data) => {
 		try {
-			await instance.put('/api/mypage/user/password', data);
-			alert('비밀번호를 변경하였습니다.');
+			const res = await instance.put('/api/mypage/user/password', data);
+			alert(res.data);
 			navigate('/mypage');
 		} catch (err) {
 			alert(err.response.data);
 		}
+	};
+
+	const formChangeCheck = () => {
+		const { password, changePassword, confirmChangePassword } = getValues();
+		if (!password || !changePassword || !confirmChangePassword) setIsAbleSubmit(false);
+		else setIsAbleSubmit(true);
 	};
 
 	useEffect(() => {
@@ -83,53 +55,63 @@ const MyPwManage = () => {
 				<link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
 			</Helmet>
 			<Header title="비밀번호 변경" isAction={true} />
-			<MyPwWrapper>
+			<MyPwWrapper onSubmit={handleSubmit(myPwChangeHandler)}>
 				<NowPwBox>
 					<p>현재 비밀번호</p>
-					<input ref={nowPw_ref} type="password" onChange={pwCheckHandler} autoComplete="off"></input>
+					<input
+						type="password"
+						autoComplete="off"
+						{...register('password', {
+							required: '현재 비밀번호 입력은 필수입니다.',
+							onChange: formChangeCheck
+						})}
+					></input>
+					{errors.password && <Fail>{errors.password.message}</Fail>}
 				</NowPwBox>
 				<NewPwBox>
 					<p>신규 비밀번호</p>
 					<input
-						ref={newPw_ref}
 						type="password"
 						placeholder="영문이나 숫자, 특수문자(!@#$%^&.*)포함 8~20자"
-						onChange={pwCheckHandler}
 						autoComplete="off"
-						onBlur={pwCheck}
+						{...register('changePassword', {
+							required: '변경할 비밀번호를 입력해주세요.',
+							pattern: {
+								value: /(?=.*[!@#$%^&.*])[0-9a-zA-Z!@#$%^&.*]$/,
+								message: '영문이나 숫자, 특수문자(!@#$%^&.*)를 포함해주세요.'
+							},
+							minLength: {
+								value: 8,
+								message: '8자리 이상, 20자리 미만으로 입력해주세요.'
+							},
+							maxLength: {
+								value: 20,
+								message: '8자리 이상, 20자리 미만으로 입력해주세요.'
+							},
+							onChange: formChangeCheck
+						})}
 					></input>
-					{pwcheck === null ? (
-						<None />
-					) : pwcheck ? (
-						<None />
-					) : (
-						<Fail>
-							<p>특수문자를 포함 영문/숫자(8-20자)으로 작성해주세요!</p>
-						</Fail>
-					)}
+					{errors.changePassword && <Fail>{errors.changePassword.message}</Fail>}
 					<input
-						ref={newConfirmPw_ref}
 						type="password"
 						placeholder="비밀번호 확인"
-						onChange={pwCheckHandler}
 						autoComplete="off"
-						onBlur={pwReCheck}
+						{...register('confirmChangePassword', {
+							required: '비밀번호가 일치하지 않습니다.',
+							validate: {
+								matchesPreviousPassword: (value) => {
+									const { changePassword } = getValues();
+									return changePassword === value || '비밀번호가 일치하지 않습니다.';
+								}
+							},
+							onChange: formChangeCheck
+						})}
 					></input>
-					{pwrecheck === null ? (
-						<None />
-					) : pwrecheck ? (
-						<None />
-					) : (
-						<Fail>
-							<p>입력하신 비밀번호와 다릅니다!</p>
-						</Fail>
-					)}
+					{errors.confirmChangePassword && <Fail>{errors.confirmChangePassword.message}</Fail>}
 				</NewPwBox>
 				<ChangeMyPwBtn
-					onClick={() => {
-						myPwChangeHandler();
-					}}
-					disabled={!changeBtnState}
+					disabled={isSubmitting || errors.password || errors.changePassword || errors.confirmChangePassword || !isAbleSubmit}
+					type="submit"
 				>
 					변경하기
 				</ChangeMyPwBtn>
@@ -140,7 +122,7 @@ const MyPwManage = () => {
 
 export default MyPwManage;
 
-const MyPwWrapper = styled.div`
+const MyPwWrapper = styled.form`
 	margin-top: 60px;
 	background: white;
 	width: 100%;
@@ -207,16 +189,9 @@ const ChangeMyPwBtn = styled.button`
 	border: none;
 `;
 
-const None = styled.div`
-	display: none;
-`;
-
 const Fail = styled.div`
-	p {
-		margin-top: 2px;
-		font-size: 13px;
-		// padding-bottom : 15px;
-		padding-left: 10px;
-		color: red;
-	}
+	margin-top: 2px;
+	font-size: 13px;
+	padding-left: 10px;
+	color: red;
 `;
