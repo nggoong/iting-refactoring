@@ -24,13 +24,12 @@ const MyPwManage = () => {
 	const [isAbleSubmit, setIsAbleSubmit] = useState(false);
 
 	const myPwChangeHandler = async (data) => {
-		console.log(data);
 		try {
 			const res = await instance.put('/api/mypage/user/password', data);
 			alert(res.data);
 			navigate('/mypage');
 		} catch (err) {
-			console.log(err.response.data);
+			alert(err.response.data);
 		}
 	};
 
