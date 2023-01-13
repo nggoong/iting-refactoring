@@ -33,7 +33,7 @@ const MyInfoManage = () => {
 			alert('사용 가능한 닉네임입니다.');
 		} catch (err) {
 			setNicknameCheck(false);
-			alert('사용 불가능한 닉네임입니다.');
+			alert(err.response.data);
 		}
 	};
 
@@ -43,15 +43,15 @@ const MyInfoManage = () => {
 			return;
 		}
 		try {
-			await instance.put('/api/mypage/user/info', data, {
+			const res = await instance.put('/api/mypage/user/info', data, {
 				headers: { 'Content-Type': `application/json` }
 			});
 			const userData = { ...userInfo, ...data };
 			setUserInfo(userData);
-			alert('개인정보 변경에 성공하였습니다.');
+			alert(res.data);
 			navigate('/mypage');
 		} catch (err) {
-			alert('개인정보 변경에 실패하였습니다.');
+			alert(err.response.data);
 		}
 	};
 
