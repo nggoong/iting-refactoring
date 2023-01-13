@@ -32,7 +32,7 @@ const Login = () => {
 			alert('환영합니다!');
 			navigate('/viewer/posting/list');
 		} catch (err) {
-			alert('아이디 또는 패스워드를 확인해주세요!');
+			alert(err.response.data);
 		}
 	};
 

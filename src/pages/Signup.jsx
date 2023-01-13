@@ -29,7 +29,7 @@ const Signup = () => {
 			alert('사용 가능한 ID 입니다!');
 			setIdDuple(true);
 		} catch (err) {
-			alert('이미 사용된 ID 입니다!');
+			alert(err.response.data);
 			setIdDuple(false);
 		}
 	};
@@ -42,7 +42,7 @@ const Signup = () => {
 			alert('사용 가능한 닉네임 입니다!');
 			setNickNameDuple(true);
 		} catch (err) {
-			alert('이미 사용된 닉네임 입니다!');
+			alert(err.response.data);
 			setNickNameDuple(false);
 		}
 	};
@@ -55,7 +55,6 @@ const Signup = () => {
 			alert('닉네임 확인이 필요해요!');
 			return;
 		}
-		console.log(data);
 		try {
 			await instance.post('/api/signup', data, {
 				headers: { 'Content-Type': `application/json` }
