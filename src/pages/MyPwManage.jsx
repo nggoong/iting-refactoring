@@ -33,19 +33,16 @@ const MyPwManage = () => {
 		}
 	};
 
+	const formChangeCheck = () => {
+		const { password, changePassword, confirmChangePassword } = getValues();
+		if (!password || !changePassword || !confirmChangePassword) setIsAbleSubmit(false);
+		else setIsAbleSubmit(true);
+	};
+
 	useEffect(() => {
 		if (userInfo.kakao) {
 			alert('카카오회원은 비밀번호 변경을 할 수 없습니다.');
 			return navigate('/mypage');
-		}
-	}, []);
-
-	useEffect(() => {
-		const inputValues = getValues();
-		const temp = Object.values(inputValues);
-		for (let i = 0; i < temp.length; i++) {
-			if (!temp[i]) setIsAbleSubmit(false);
-			else setIsAbleSubmit(true);
 		}
 	}, []);
 
@@ -66,10 +63,7 @@ const MyPwManage = () => {
 						autoComplete="off"
 						{...register('password', {
 							required: '현재 비밀번호 입력은 필수입니다.',
-							onChange: ({ target }) => {
-								const value = target;
-								!value ? setIsAbleSubmit(false) : setIsAbleSubmit(true);
-							}
+							onChange: formChangeCheck
 						})}
 					></input>
 					{errors.password && <Fail>{errors.password.message}</Fail>}
@@ -94,10 +88,7 @@ const MyPwManage = () => {
 								value: 20,
 								message: '8자리 이상, 20자리 미만으로 입력해주세요.'
 							},
-							onChange: ({ target }) => {
-								const value = target;
-								!value ? setIsAbleSubmit(false) : setIsAbleSubmit(true);
-							}
+							onChange: formChangeCheck
 						})}
 					></input>
 					{errors.changePassword && <Fail>{errors.changePassword.message}</Fail>}
@@ -113,10 +104,7 @@ const MyPwManage = () => {
 									return changePassword === value || '비밀번호가 일치하지 않습니다.';
 								}
 							},
-							onChange: ({ target }) => {
-								const value = target;
-								!value ? setIsAbleSubmit(false) : setIsAbleSubmit(true);
-							}
+							onChange: formChangeCheck
 						})}
 					></input>
 					{errors.confirmChangePassword && <Fail>{errors.confirmChangePassword.message}</Fail>}
