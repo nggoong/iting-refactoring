@@ -34,12 +34,9 @@ const Post = () => {
 	};
 
 	const changeTextData = (e) => {
-		// context의 state를 변경
-		// 글을 등록할 때 context의 state를 서버에 request body로 보내기 때문
 		setPostData({ ...postData, [e.target.name]: e.target.value });
 	};
 
-	// velog 처럼 해시태그 추가할 때 스페이스바 누르면 추가되는 기능
 	const keyupSpace = (e) => {
 		if (e.code === 'Space') {
 			if (!hashInput.trim()) {
@@ -60,7 +57,6 @@ const Post = () => {
 		}
 	};
 
-	// 해시태그 추가
 	const hashtagSubmit = (e) => {
 		e.preventDefault();
 		if (!hashInput) {
@@ -104,7 +100,6 @@ const Post = () => {
 	});
 
 	const postSubmitHandler = () => {
-		//TODO: useMutation 사용해서 글 작성
 		const { title, posting_content, hashtag } = postData;
 		if (!title || !posting_content) {
 			alert('제목과 내용을 모두 채워주세요!');
@@ -114,22 +109,12 @@ const Post = () => {
 			title,
 			posting_content,
 			hashtag
-			// imgUrl:'shdlfl' // TODO: 지우기
 		};
 		submitPosting(newData);
-		// navigate("/viewer/posting/list");
-		// return queryClient.invalidateQueries(["postings"]);
 	};
 
 	const postEditHandler = () => {
-		const { title, posting_content, hashtag } = postData;
-		const newData = {
-			title,
-			posting_content,
-			hashtag
-			// imgUrl:'shdlfl'
-		};
-		submitEditing({ postingId, newData });
+		submitEditing({ postingId, newData: { ...postData } });
 	};
 
 	useEffect(() => {
@@ -236,7 +221,6 @@ const Post = () => {
 export default Post;
 
 const PostWrapper = styled.div`
-	// app.js의 content가 480px로 limit
 	padding-top: 60px;
 	width: calc(100% - 40px);
 	margin: 0 auto;
@@ -250,7 +234,6 @@ const PostWrapper = styled.div`
 const PostContent = styled.div`
 	display: flex;
 	flex-direction: column;
-	/* gap:10px; */
 	& > input {
 		width: 100%;
 		height: 58px;
@@ -283,7 +266,6 @@ const PostContent = styled.div`
 		line-height: 18px;
 		height: 40vh;
 		margin-bottom: 10px;
-		/* background:blue; */
 	}
 `;
 
@@ -323,7 +305,6 @@ const HashTagForm = styled.form`
 
 const HashtagViewer = styled.div`
 	display: flex;
-	/* gap:10px; */
 	flex-wrap: wrap;
 	width: 100%;
 	margin-bottom: 100px;
