@@ -1,5 +1,5 @@
-export const editPostingTime = (value) => {
-	const milliSeconds = new Date() - new Date(value);
+export const editPostingTime = (value: number) => {
+	const milliSeconds = +new Date() - +new Date(value);
 	const seconds = milliSeconds / 1000;
 	if (seconds < 60) return `방금 전`;
 	const minutes = seconds / 60;
@@ -16,7 +16,7 @@ export const editPostingTime = (value) => {
 	return `${Math.floor(years)}년 전`;
 };
 
-export const hashtagValidation = (hashtagInput, hashtagArray) => {
+export const hashtagValidation = (hashtagInput: string, hashtagArray: string[]) => {
 	if (!hashtagInput) {
 		alert('특수문자, 공백은 사용할 수 없습니다!');
 		return false;
@@ -30,7 +30,7 @@ export const hashtagValidation = (hashtagInput, hashtagArray) => {
 	return true;
 };
 
-export const userTypeTrans = (userType) => {
+export const userTypeTrans = (userType: string) => {
 	if (userType === 'SEEKER') return '취준생';
 	else if (userType === 'JUNIOR') return '주니어';
 	else if (userType === 'SENIOR') return '시니어';
