@@ -55,3 +55,9 @@ export interface TypeSignup {
 	checkPassword: string;
 	user_type: string;
 }
+
+export interface TypeChangePassword {
+	password: string;
+	changePassword: string;
+	confirmChangePassword: string;
+}
