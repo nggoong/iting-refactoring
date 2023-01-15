@@ -11,14 +11,15 @@ import { postingsAPI } from '../shared/api';
 
 import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
+import { TypePostPosting } from '../typings';
 
 const Post = () => {
 	const queryClient = useQueryClient();
 	const [hashInput, setHashInput] = useState('');
 	const userInfoContext = useContext(userContext);
 	const { userInfo } = userInfoContext.state;
-	const hashRef = useRef(null);
-	const [postData, setPostData] = useState({
+	const hashRef = useRef<HTMLDivElement | null>(null);
+	const [postData, setPostData] = useState<TypePostPosting>({
 		title: '',
 		posting_content: '',
 		hashtag: []
@@ -26,18 +27,18 @@ const Post = () => {
 
 	const pathname = useLocation().pathname;
 	const params = useParams();
-	const postingId = params.postingId;
+	const postingId = Number(params.postingId);
 	const navigate = useNavigate();
 
-	const changeHashInput = (e) => {
-		setHashInput(e.target.value);
+	const changeHashInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setHashInput((e.target as HTMLInputElement).value);
 	};
 
-	const changeTextData = (e) => {
+	const changeTextData = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setPostData({ ...postData, [e.target.name]: e.target.value });
 	};
 
-	const keyupSpace = (e) => {
+	const keyupSpace = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.code === 'Space') {
 			if (!hashInput.trim()) {
 				setHashInput('');
@@ -57,7 +58,7 @@ const Post = () => {
 		}
 	};
 
-	const hashtagSubmit = (e) => {
+	const hashtagSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!hashInput) {
 			return;
@@ -79,7 +80,7 @@ const Post = () => {
 			await queryClient.invalidateQueries(['postings']);
 			return navigate('/viewer/posting/list');
 		},
-		onError: (err) => {
+		onError: (err: any) => {
 			if (err.response.status === 401) return;
 			alert('게시글을 등록하지 못했습니다.');
 			navigate('/viewer/posting/list');
@@ -92,7 +93,7 @@ const Post = () => {
 			await queryClient.invalidateQueries(['postings']);
 			return navigate(`/detail/posting/${postingId}`);
 		},
-		onError: (err) => {
+		onError: (err: any) => {
 			if (err.response.status === 401) return;
 			alert('게시글을 수정하지 못했습니다.');
 			navigate('/viewer/posting/list');
@@ -145,7 +146,7 @@ const Post = () => {
 
 	useEffect(() => {
 		if (!postData.hashtag.length) return;
-		hashRef.current.scrollIntoView({ behavior: 'smooth' });
+		hashRef.current!.scrollIntoView({ behavior: 'smooth' });
 	}, [postData.hashtag]);
 	return (
 		<WhiteBackground>
@@ -174,7 +175,6 @@ const Post = () => {
 						name="posting_content"
 						onChange={changeTextData}
 					></textarea>
-					{/* <hr></hr> */}
 					<HashTagForm onSubmit={hashtagSubmit}>
 						<button className="hashtag-submit-button" type="submit">
 							<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

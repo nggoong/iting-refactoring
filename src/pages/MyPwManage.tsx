@@ -8,13 +8,15 @@ import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 
+import { TypeChangePassword } from '../typings';
+
 const MyPwManage = () => {
 	const {
 		register,
 		handleSubmit,
 		getValues,
 		formState: { isSubmitting, errors }
-	} = useForm({
+	} = useForm<TypeChangePassword>({
 		mode: 'onChange'
 	});
 	const navigate = useNavigate();
@@ -23,12 +25,12 @@ const MyPwManage = () => {
 	const { userInfo } = context.state;
 	const [isAbleSubmit, setIsAbleSubmit] = useState(false);
 
-	const myPwChangeHandler = async (data) => {
+	const myPwChangeHandler = async (data: TypeChangePassword) => {
 		try {
 			const res = await instance.put('/api/mypage/user/password', data);
 			alert(res.data);
 			navigate('/mypage');
-		} catch (err) {
+		} catch (err: any) {
 			alert(err.response.data);
 		}
 	};
@@ -110,7 +112,11 @@ const MyPwManage = () => {
 					{errors.confirmChangePassword && <Fail>{errors.confirmChangePassword.message}</Fail>}
 				</NewPwBox>
 				<ChangeMyPwBtn
-					disabled={isSubmitting || errors.password || errors.changePassword || errors.confirmChangePassword || !isAbleSubmit}
+					disabled={
+						isSubmitting || errors.password || errors.changePassword || errors.confirmChangePassword || !isAbleSubmit
+							? true
+							: false
+					}
 					type="submit"
 				>
 					변경하기

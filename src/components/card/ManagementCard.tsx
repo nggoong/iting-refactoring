@@ -2,10 +2,22 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const ManagementCard = ({ isShow, svg, managementType, pathUrl, feedbackUrl }) => {
+interface ManagementWrapperProps {
+	isShow?: boolean;
+}
+
+interface Props {
+	isShow: boolean;
+	svg: any;
+	managementType: string;
+	pathUrl?: string;
+	feedbackUrl?: string;
+}
+
+const ManagementCard = ({ isShow, svg, managementType, pathUrl, feedbackUrl }: Props) => {
 	const navigate = useNavigate();
 	const ClickHandler = () => {
-		if (!feedbackUrl) navigate(pathUrl);
+		if (!feedbackUrl && pathUrl) navigate(pathUrl);
 		else window.open(feedbackUrl);
 	};
 	return (
@@ -20,7 +32,7 @@ const ManagementCard = ({ isShow, svg, managementType, pathUrl, feedbackUrl }) =
 
 export default ManagementCard;
 
-const ManagementWrapper = styled.div`
+const ManagementWrapper = styled.div<ManagementWrapperProps>`
 	display: ${(props) => (props.isShow ? 'flex' : 'none')};
 	padding: 20px;
 	color: #656565;
