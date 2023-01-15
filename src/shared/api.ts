@@ -1,5 +1,5 @@
 import instance from './axios';
-import { PostPosting, postEditing } from '../typings';
+import { TypePostPosting, TypePostEditing } from '../typings';
 
 export const postingsAPI = {
 	fetchPostingsListWithScroll: async (pageParams: number, category: string) => {
@@ -15,12 +15,12 @@ export const postingsAPI = {
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
 	},
-	postPosting: async (newData: PostPosting) => {
+	postPosting: async (newData: TypePostPosting) => {
 		const res = await instance.post('/api/board', newData);
 		return res.data;
 	},
 
-	postEditing: async ({ postingId, newData }: postEditing) => {
+	postEditing: async ({ postingId, newData }: TypePostEditing) => {
 		console.log(postingId);
 		console.log(newData);
 		await instance.put(`/api/board/${postingId}`, newData);
