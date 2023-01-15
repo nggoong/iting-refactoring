@@ -4,8 +4,8 @@ import Search from './Search';
 import PageTitle from './PageTitle';
 
 interface Props {
-	title: string;
-	isAction: boolean;
+	title?: string;
+	isAction?: boolean;
 	postActions?: () => void;
 }
 
