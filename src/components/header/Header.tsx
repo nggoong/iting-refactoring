@@ -3,7 +3,13 @@ import styled from 'styled-components';
 import Search from './Search';
 import PageTitle from './PageTitle';
 
-const Header = ({ title, isAction, postActions }) => {
+interface Props {
+	title: string;
+	isAction: boolean;
+	postActions?: () => void;
+}
+
+const Header = ({ title, isAction, postActions }: Props) => {
 	return (
 		<HeaderWrapper>
 			<PageTitle title={title} isAction={isAction} postActions={postActions}></PageTitle>
@@ -18,7 +24,6 @@ const HeaderWrapper = styled.div`
 	position: fixed;
 	top: 0;
 	left: 0;
-	/* height:60px; */
 	width: 100%;
 	max-width: 480px;
 	left: 50%;

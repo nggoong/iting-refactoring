@@ -14,6 +14,16 @@ export interface CreateChatRoom {
 	hashtag: string[];
 }
 
+export interface TypeChatRoom {
+	username:string;
+	title:string;
+	user_type:string;
+	nickname:string;
+	isfull:boolean;
+	roomId:number;
+	hashtag:string[];
+}
+
 export interface TypeSignup {
 	username: string;
 	nickname: string;
