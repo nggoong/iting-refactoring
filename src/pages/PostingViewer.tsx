@@ -11,6 +11,11 @@ import Loading from '../components/loading/Loading';
 import ErrorFound from '../components/notice/NotFound';
 
 import { Helmet } from 'react-helmet';
+import { TypePosting } from '../typings';
+
+interface PostingViewerWrapperProps {
+	paramCategory?: string;
+}
 
 const PostingViewer = () => {
 	const paramCategory = useParams().category;
@@ -24,7 +29,7 @@ const PostingViewer = () => {
 		isError: listFetchError
 	} = useInfiniteQuery(
 		['postings', paramCategory],
-		({ pageParam = 0 }) => postingsAPI.fetchPostingsListWithScroll(pageParam, paramCategory),
+		({ pageParam = 0 }) => postingsAPI.fetchPostingsListWithScroll(pageParam, paramCategory!),
 		{
 			enabled: !!!paramHashtag,
 			staleTime: 3000,
@@ -41,7 +46,7 @@ const PostingViewer = () => {
 		isError: searchListFetchError
 	} = useInfiniteQuery(
 		['postings', 'search', paramHashtag],
-		({ pageParam = 0 }) => postingsAPI.fetchSearchPostingsListWithScroll(pageParam, paramHashtag),
+		({ pageParam = 0 }) => postingsAPI.fetchSearchPostingsListWithScroll(pageParam, paramHashtag!),
 		{
 			enabled: !!paramHashtag,
 			staleTime: 3000,
@@ -70,24 +75,24 @@ const PostingViewer = () => {
 			</Helmet>
 			<Header />
 			{!paramHashtag &&
-				(listData.pages[0]?.posts?.length === 0 ? (
+				(listData!.pages[0]?.posts?.length === 0 ? (
 					<Notice title={'게시글이 없습니다!'} text={'첫 게시글을 등록해보세요!'} />
 				) : (
-					listData.pages?.map((page, index) => (
+					listData!.pages?.map((page, index) => (
 						<Page key={index}>
-							{page.posts.map((post) => (
+							{page.posts.map((post: TypePosting) => (
 								<PostingCard key={post.posting_id} post={post}></PostingCard>
 							))}
 						</Page>
 					))
 				))}
 			{!paramHashtag ||
-				(searchListData.pages[0]?.posts?.length === 0 ? (
+				(searchListData!.pages[0]?.posts?.length === 0 ? (
 					<Notice title={'게시글이 없습니다!'} text={'다른 해시태그로 검색해보세요!'} />
 				) : (
-					searchListData.pages?.map((page, index) => (
+					searchListData!.pages?.map((page, index) => (
 						<Page key={index}>
-							{page.posts.map((post) => (
+							{page.posts.map((post: TypePosting) => (
 								<PostingCard key={post.posting_id} post={post}></PostingCard>
 							))}
 						</Page>
@@ -101,14 +106,12 @@ const PostingViewer = () => {
 
 export default PostingViewer;
 
-const PostingViewerWrapper = styled.div`
+const PostingViewerWrapper = styled.div<PostingViewerWrapperProps>`
 	display: flex;
 	flex-direction: column;
-	/* gap:10px; */
 	width: 100%;
 	margin: 0 auto;
 	padding-top: ${(props) => (props.paramCategory === 'mypostings' ? '60px' : '87px')};
-	//TODO: 헤더의 개수에 따라 padding-top값 조정하기
 `;
 
 const Page = styled.div`
