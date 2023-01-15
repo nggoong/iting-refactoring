@@ -13,3 +13,11 @@ export interface CreateChatRoom {
 	title: string;
 	hashtag: string[];
 }
+
+export interface TypeSignup {
+	username: string;
+	nickname: string;
+	password: string;
+	checkPassword: string;
+	user_type: string;
+}

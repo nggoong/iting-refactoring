@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import instance from '../shared/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { TypeSignup } from '../typings';
 
 const Signup = () => {
 	const navigate = useNavigate();
@@ -12,42 +13,41 @@ const Signup = () => {
 		handleSubmit,
 		getValues,
 		formState: { isSubmitting, errors }
-	} = useForm({ mode: 'onChange' });
+	} = useForm<TypeSignup>({ mode: 'onChange' });
 	const [userType, setUserType] = useState('SEEKER');
-	const [idduple, setIdDuple] = useState(null);
-	const [nicknameduple, setNickNameDuple] = useState(null);
-	const selectUserType = (e) => {
-		setUserType(e.target.value);
+	const [idduple, setIdDuple] = useState<null | boolean>(null);
+	const [nicknameduple, setNickNameDuple] = useState<null | boolean>(null);
+
+	const selectUserType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setUserType((e.target as HTMLSelectElement).value);
 		console.log(userType);
 	};
 
-	const submitId = async (e) => {
-		e.preventDefault();
+	const submitId = async () => {
 		const { username } = getValues();
 		try {
 			await instance.get(`/api/users/email/${username}`);
 			alert('사용 가능한 ID 입니다!');
 			setIdDuple(true);
-		} catch (err) {
+		} catch (err: any) {
 			alert(err.response.data);
 			setIdDuple(false);
 		}
 	};
 
-	const submitNickName = async (e) => {
-		e.preventDefault();
+	const submitNickName = async () => {
 		const { nickname } = getValues();
 		try {
 			await instance.get(`/api/users/nickname/${nickname}`);
 			alert('사용 가능한 닉네임 입니다!');
 			setNickNameDuple(true);
-		} catch (err) {
+		} catch (err: any) {
 			alert(err.response.data);
 			setNickNameDuple(false);
 		}
 	};
 
-	const onSubmitSignup = async (data) => {
+	const onSubmitSignup: SubmitHandler<TypeSignup> = async (data) => {
 		if (!idduple) {
 			alert('아이디 확인이 필요해요!');
 			return;
@@ -60,9 +60,10 @@ const Signup = () => {
 				headers: { 'Content-Type': `application/json` }
 			});
 			alert('회원가입이 완료되었습니다!');
-			navigate('/login');
+			return navigate('/login');
 		} catch (err) {
 			alert('회원가입에 문제가 생겼어요!');
+			return;
 		}
 	};
 
@@ -79,7 +80,6 @@ const Signup = () => {
 				<IdBox>
 					<input
 						placeholder="이메일 형식"
-						name="username"
 						{...register('username', {
 							required: '이메일 입력은 필수입니다.',
 							pattern: {
@@ -90,6 +90,7 @@ const Signup = () => {
 					/>
 					<button
 						className={!errors.username ? 'btnstart' : 'btnfalse'}
+						type="button"
 						disabled={errors.username ? true : false}
 						onClick={submitId}
 					>
@@ -125,7 +126,7 @@ const Signup = () => {
 						type="password"
 						placeholder="비밀번호 확인"
 						{...register('checkPassword', {
-							require: '비밀번호를 확인해주세요.',
+							required: '비밀번호를 확인해주세요.',
 							validate: {
 								matchesPreviousPassword: (value) => {
 									const { password } = getValues();
@@ -159,6 +160,7 @@ const Signup = () => {
 					/>
 					<button
 						className={!errors.nickname ? 'btnstart' : !errors.nickname ? '' : 'btnfalse'}
+						type="button"
 						disabled={errors.nickname ? true : false}
 						onClick={submitNickName}
 					>
@@ -169,7 +171,11 @@ const Signup = () => {
 				{errors.nickname && <Fail role="alert">{errors.nickname.message}</Fail>}
 
 				<UsertypeBox>
-					<select name="userType" onChange={selectUserType} {...register('user_type')}>
+					<select
+						{...register('user_type', {
+							onChange: selectUserType
+						})}
+					>
 						<option value="SEEKER">취준생</option>
 						<option value="JUNIOR">주니어</option>
 						<option value="SENIOR">시니어</option>
@@ -177,7 +183,7 @@ const Signup = () => {
 				</UsertypeBox>
 
 				<SignupBottom>
-					<button className={(idduple && nicknameduple) || 'btnfalse'} type="submit" disabled={isSubmitting}>
+					<button className={idduple && nicknameduple ? 'btnstart' : 'btnfalse'} type="submit" disabled={isSubmitting}>
 						가입하기
 					</button>
 					<Link to="/login">

@@ -21,7 +21,6 @@ const Splash = () => {
 				<link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
 			</Helmet>
 			<SplashWrapper>
-				{/* <LogoDiv style={{backgroundImage:`url(${mainLogo})`}}/> */}
 				<svg width="142" height="83" viewBox="0 0 142 83" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<g clipPath="url(#clip0_833_4269)">
 						<path
