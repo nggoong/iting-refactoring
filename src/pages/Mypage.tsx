@@ -6,8 +6,6 @@ import { userContext } from '../context/UserProvider';
 import { userTypeTrans } from '../shared/sharedFn';
 
 import { useNavigate } from 'react-router-dom';
-
-// FIXME: 카카오로그인이면 비밀번호 변경 렌더링 안되게
 import { Helmet } from 'react-helmet';
 
 const Mypage = () => {
