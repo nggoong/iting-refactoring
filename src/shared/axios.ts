@@ -6,12 +6,11 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config) => {
 	const token = sessionStorage.getItem('Authorization');
-
 	if (!token) {
-		config.headers.common['Authorization'] = null;
+		config.headers!.authorization = 'Bearer token';
 		return config;
 	} else {
-		config.headers.common['Authorization'] = token;
+		config.headers!.authorization = token;
 		return config;
 	}
 });
@@ -26,27 +25,28 @@ instance.interceptors.response.use(
 			const prevAccessToken = sessionStorage.getItem('Authorization');
 			const originRequest = err.config; // 원래의 요청
 			try {
-				const res = await axios.put(
-					`${process.env.REACT_APP_API_URL}/api/refreshToken`,
-					{},
-					{
-						headers: {
-							Authorization: prevAccessToken,
-							RefreshToken: refreshToken
+				if (prevAccessToken && refreshToken) {
+					const res = await axios.put(
+						`${process.env.REACT_APP_API_URL}/api/refreshToken`,
+						{},
+						{
+							headers: {
+								authorization: prevAccessToken,
+								RefreshToken: refreshToken
+							}
 						}
-					}
-				);
-				const newAccessToken = res.headers.authorization;
-				sessionStorage.setItem('Authorization', newAccessToken);
-				originRequest.headers.Authorization = newAccessToken;
+					);
+					const newAccessToken = res.headers.authorization;
+					sessionStorage.setItem('Authorization', newAccessToken);
+					originRequest.headers!.authorization = newAccessToken;
 
-				return instance.request(originRequest).catch((err) => {
-					alert('세션이 만료되었습니다.');
-					console.log(err);
-					window.location.href = '/login';
-				});
-			} catch (err) {
-				alert('세션이 만료되었습니다.');
+					return instance.request(originRequest).catch((err) => {
+						alert(err.response.data);
+						window.location.href = '/login';
+					});
+				}
+			} catch (err: any) {
+				alert(err.response.data);
 				sessionStorage.removeItem('Authorization');
 				window.location.href = '/login';
 			}
