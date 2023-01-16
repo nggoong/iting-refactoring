@@ -8,6 +8,8 @@ import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 
+import { TypeChangeNickname } from '../typings';
+
 const MyInfoManage = () => {
 	const navigate = useNavigate();
 	const context = useContext(userContext);
@@ -18,7 +20,7 @@ const MyInfoManage = () => {
 		handleSubmit,
 		getValues,
 		formState: { isSubmitting, errors }
-	} = useForm({ mode: 'onChange' });
+	} = useForm<TypeChangeNickname>({ mode: 'onChange' });
 
 	const [nicknameCheck, setNicknameCheck] = useState(false);
 	const [userTypeState, setUserTypeState] = useState(false);
@@ -31,14 +33,14 @@ const MyInfoManage = () => {
 			await instance.get(`/api/users/nickname/${nickname}`);
 			setNicknameCheck(true);
 			alert('사용 가능한 닉네임입니다.');
-		} catch (err) {
+		} catch (err: any) {
 			setNicknameCheck(false);
 			alert(err.response.data);
 		}
 	};
 
-	const myInfoChangeHandler = async (data) => {
-		if (!nicknameCheck) {
+	const myInfoChangeHandler = async (data: TypeChangeNickname) => {
+		if (!nicknameCheck && dupCheckBtnState) {
 			alert('닉네임 중복 확인을 해주세요.');
 			return;
 		}
@@ -50,7 +52,7 @@ const MyInfoManage = () => {
 			setUserInfo(userData);
 			alert(res.data);
 			navigate('/mypage');
-		} catch (err) {
+		} catch (err: any) {
 			alert(err.response.data);
 		}
 	};
@@ -95,7 +97,11 @@ const MyInfoManage = () => {
 								}
 							})}
 						></input>
-						<NicknameCheckBtn onClick={nicknameCheckHandler} disabled={!dupCheckBtnState || errors.nickname} type="button">
+						<NicknameCheckBtn
+							onClick={nicknameCheckHandler}
+							disabled={!dupCheckBtnState || errors.nickname ? true : false}
+							type="button"
+						>
 							{' '}
 							중복 확인{' '}
 						</NicknameCheckBtn>
