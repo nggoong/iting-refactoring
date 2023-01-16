@@ -3,23 +3,25 @@ import styled from 'styled-components';
 import instance from '../shared/axios';
 import kakao_login from '../assets/images/kakao_login.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, FieldErrors } from 'react-hook-form';
 import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
+
+import { TypeLogin } from '../typings';
 
 const Login = () => {
 	const {
 		register,
 		handleSubmit,
 		formState: { isSubmitting }
-	} = useForm();
+	} = useForm<TypeLogin>();
 
 	const navigate = useNavigate();
 
 	const context = useContext(userContext);
 	const { setUserInfo } = context.actions;
 
-	const onSubmitLogin = async (data) => {
+	const onSubmitLogin = async (data: TypeLogin) => {
 		try {
 			const res = await instance.post('/api/login', data);
 			const token = res.headers.authorization;
@@ -31,12 +33,12 @@ const Login = () => {
 			sessionStorage.setItem('Refresh__Token', refreshtoken);
 			alert('환영합니다!');
 			navigate('/viewer/posting/list');
-		} catch (err) {
+		} catch (err: any) {
 			alert(err.response.data);
 		}
 	};
 
-	const onSubmitError = (errors) => {
+	const onSubmitError = (errors: FieldErrors) => {
 		if (errors.username) alert(errors.username.message);
 		else if (errors.password) alert(errors.password.message);
 	};
@@ -84,7 +86,6 @@ const Login = () => {
 			<Inputarea onSubmit={handleSubmit(onSubmitLogin, onSubmitError)}>
 				<input
 					placeholder="EMAIL"
-					name="EMAIL"
 					{...register('username', {
 						required: '이메일을 입력해주세요!',
 						pattern: {
@@ -96,7 +97,6 @@ const Login = () => {
 				<input
 					placeholder="PW"
 					type="password"
-					name="PW"
 					{...register('password', {
 						required: '비밀번호를 입력해주세요!'
 					})}
