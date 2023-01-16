@@ -61,3 +61,8 @@ export interface TypeChangePassword {
 	changePassword: string;
 	confirmChangePassword: string;
 }
+
+export interface TypeChangeNickname {
+	nickname:string;
+	user_type:string;
+}
