@@ -63,6 +63,6 @@ export interface TypeChangePassword {
 }
 
 export interface TypeChangeNickname {
-	nickname:string;
-	user_type:string;
+	nickname: string;
+	user_type: string;
 }
