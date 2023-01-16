@@ -56,6 +56,11 @@ export interface TypeSignup {
 	user_type: string;
 }
 
+export interface TypeLogin {
+	username: string;
+	password: string;
+}
+
 export interface TypeChangePassword {
 	password: string;
 	changePassword: string;
