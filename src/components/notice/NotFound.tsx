@@ -1,42 +1,47 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-const Notice = ({ title, text }) => {
+interface Props {
+	title: string;
+	text: string;
+}
+
+const ErrorFound = ({ title, text }: Props) => {
 	return (
-		<NoticeWrapper>
+		<NotFoundWrapper>
 			<ContentArea>
 				<p className="notice-title">{title}</p>
 				<p className="notice-text">{text}</p>
+				<Link className="notice-home" to="/viewer/posting/list">
+					홈으로 가기
+				</Link>
 			</ContentArea>
-			<ImageArea></ImageArea>
-		</NoticeWrapper>
+		</NotFoundWrapper>
 	);
 };
 
-export default Notice;
+export default ErrorFound;
 
-const NoticeWrapper = styled.div`
-	position: fixed;
+const NotFoundWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
-	width: 100%;
+	width: 100vw;
 	max-width: 480px;
 	height: 100vh;
-	padding-bottom: 160px;
-	/* padding-top:50px; */
-	box-sizing: border-box;
+	position: fixed;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, 0);
 	background: white;
-	user-select: none;
+	z-index: 99999;
 `;
 
 const ContentArea = styled.div`
 	width: 100%;
 	color: ${({ theme }) => theme.colors.mainBlue};
-	p {
-		text-align: center;
-	}
+	text-align: center;
 	.notice-title {
 		font-weight: 700;
 		font-size: 30px;
@@ -47,8 +52,10 @@ const ContentArea = styled.div`
 		font-size: 16px;
 		letter-spacing: -0.3px;
 	}
-`;
-
-const ImageArea = styled.div`
-	width: 100%;
+	.notice-home {
+		display: block;
+		margin-top: 20px;
+		text-decoration: none;
+		color: ${({ theme }) => theme.colors.mainBlue};
+	}
 `;

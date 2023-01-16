@@ -1,7 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Notice = ({ children }) => {
+interface Props {
+	children: string;
+}
+
+const Notice = ({ children }: Props) => {
 	return (
 		<NoticeWrapper>
 			<p>{children}</p>

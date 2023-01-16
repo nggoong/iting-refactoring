@@ -2,7 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const AutoCompleteCard = ({ value }) => {
+interface Props {
+	value: {
+		hashtag: string;
+		count: number;
+	};
+}
+
+const AutoCompleteCard = ({ value }: Props) => {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 

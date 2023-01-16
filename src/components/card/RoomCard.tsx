@@ -5,7 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import { userTypeTrans } from '../../shared/sharedFn';
 import { FiChevronRight } from 'react-icons/fi';
 
-const RoomCard = ({ room }) => {
+interface Props {
+	room: {
+		roomId: number;
+		isfull: boolean;
+		title: string;
+		nickname: string;
+		user_type: string;
+		hashtag: string[];
+	};
+}
+
+const RoomCard = ({ room }: Props) => {
 	const navigate = useNavigate();
 
 	const roomCardClickHandler = () => {

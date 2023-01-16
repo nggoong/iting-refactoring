@@ -8,8 +8,27 @@ import { editPostingTime } from '../../shared/sharedFn';
 import instance from '../../shared/axios';
 import { userContext } from '../../context/UserProvider';
 
-const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEditStateForSubmit }) => {
-	const commentEditInput = useRef();
+interface Props {
+	data: any;
+	postingId: string;
+	commentEditStateForSubmit: boolean;
+	setCommentEditStateForSubmit: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface CommentContentProps {
+	isShow: boolean;
+}
+
+interface CommentContentEditProps {
+	state: boolean;
+}
+
+interface CommentLikeBtnProps {
+	isLike: boolean;
+}
+
+const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEditStateForSubmit }: Props) => {
+	const commentEditInput = useRef<HTMLTextAreaElement | null>(null);
 	const queryClient = useQueryClient();
 
 	const [commentEditState, setCommentEditState] = useState(false);
@@ -20,8 +39,8 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 	const loginNickname = userInfo.nickname;
 
 	// 댓글 기능관련
-	const editComment = async (commentId) => {
-		const comment = { content: commentEditInput.current.value };
+	const editComment = async (commentId: string) => {
+		const comment = { content: commentEditInput.current?.value };
 		await instance.put(`/api/board/${postingId}/comment/${commentId}`, comment);
 	};
 
@@ -31,7 +50,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 		}
 	});
 
-	const deleteComment = async (commentId) => {
+	const deleteComment = async (commentId: string) => {
 		const result = window.confirm('댓글을 삭제하시겠습니까?');
 		if (result) {
 			await instance.delete(`/api/board/${postingId}/comment/${commentId}`);
@@ -44,11 +63,11 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 		}
 	});
 
-	const commentLike = async () => {
+	const commentLike = async (id: string) => {
 		if (data.like === true) {
-			return await instance.delete(`/api/comment/${data.id}/likes`);
+			return await instance.delete(`/api/comment/${id}/likes`);
 		} else {
-			return await instance.post(`/api/comment/${data.id}/likes`);
+			return await instance.post(`/api/comment/${id}/likes`);
 		}
 	};
 
@@ -110,7 +129,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 									onClick={() => {
 										setCommentEditState(true);
 										setCommentEditStateForSubmit(true);
-										commentEditInput.current.value = data.content;
+										commentEditInput.current!.value = data.content;
 									}}
 								>
 									수정
@@ -168,12 +187,12 @@ const CommentWriter = styled.div`
 	}
 `;
 
-const CommentContent = styled.div`
+const CommentContent = styled.div<CommentContentProps>`
 	font-size: 16px;
 	display: ${(props) => (props.isShow ? 'none' : 'block')};
 `;
 
-const CommentContentEdit = styled.div`
+const CommentContentEdit = styled.div<CommentContentEditProps>`
 	display: ${(props) => (props.state ? 'block' : 'none')};
 `;
 
@@ -224,7 +243,7 @@ const CommentDateAndLikeBox = styled.div`
 	}
 `;
 
-const CommentEditAndDelBox = styled.div`
+const CommentEditAndDelBox = styled.div<CommentContentEditProps>`
 	display: ${(props) => (props.state ? 'none' : 'flex')};
 	justify-content: space-between;
 	color: #3549ff;
@@ -239,7 +258,7 @@ const CommentDel = styled.div`
 	cursor: pointer;
 `;
 
-const CommentLikeBtn = styled.div`
+const CommentLikeBtn = styled.div<CommentLikeBtnProps>`
 	cursor: pointer;
 	display: flex;
 	align-items: center;
