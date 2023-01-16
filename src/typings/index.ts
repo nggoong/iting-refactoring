@@ -48,6 +48,14 @@ export interface TypeCreateChatRoom {
 	hashtag: string[];
 }
 
+export interface TypeChatMessage {
+	nickname: string;
+	messageType: string;
+	enter: string;
+	message: string;
+	time: string;
+}
+
 export interface TypeSignup {
 	username: string;
 	nickname: string;
@@ -70,4 +78,11 @@ export interface TypeChangePassword {
 export interface TypeChangeNickname {
 	nickname: string;
 	user_type: string;
+}
+
+export interface TypeChatRoomNavigateState {
+	state: {
+		title?: string;
+		isHost: boolean;
+	};
 }
