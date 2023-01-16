@@ -3,33 +3,44 @@ import styled, { css } from 'styled-components';
 import instance from '../../shared/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
-
 import { BiRightArrowCircle } from 'react-icons/bi';
 
-const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSubmit }) => {
-	const commentInput = useRef();
+interface CommentAddBoxProps {
+	isShow?: boolean;
+	onSubmit?: any;
+}
+
+interface Props {
+	postingId?: number;
+	placeholderText?: string;
+	sendMsg?: (messageText: string) => void;
+	commentEditStateForSubmit?: boolean;
+}
+
+const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSubmit }: Props) => {
+	const commentInput = useRef<HTMLInputElement | null>(null);
 	const queryClient = useQueryClient();
 	const location = useLocation();
 
 	const addComment = async () => {
-		const comment = { content: commentInput.current.value };
+		const comment = { content: commentInput.current!.value };
 		return await instance.post(`/api/board/${postingId}/comment`, comment);
 	};
 
 	const { mutate: commentAddHandler } = useMutation(addComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
-			commentInput.current.value = '';
+			commentInput.current!.value = '';
 		}
 	});
 
-	const submitButtonHandler = (e) => {
+	const submitButtonHandler = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.preventDefault();
-		if (!commentInput.current.value) return;
+		if (!commentInput.current!.value) return;
 
 		if (location.pathname.includes('/detail/room/chat')) {
-			sendMsg(commentInput.current.value);
-			commentInput.current.value = '';
+			sendMsg!(commentInput.current!.value);
+			commentInput.current!.value = '';
 		} else commentAddHandler();
 	};
 
@@ -49,7 +60,7 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 
 export default React.memo(SubmitForm);
 
-const CommentAddBox = styled.form`
+const CommentAddBox = styled.form<CommentAddBoxProps>`
 	background: #efefef;
 	margin: 0 auto;
 	width: 100%;

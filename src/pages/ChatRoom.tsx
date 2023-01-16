@@ -13,21 +13,23 @@ import OtherBubble from '../components/speechBubble/OtherBubble';
 import Header from '../components/header/Header';
 import Notice from '../components/speechBubble/Notice';
 
+import { TypeChatMessage, TypeChatRoomNavigateState } from '../typings';
+
 const ChatRoom = () => {
-	const [messages, setMessages] = useState([]);
+	const [messages, setMessages] = useState<TypeChatMessage[]>([]);
 	const nicknameRef = useRef('');
-	const chatRef = useRef(null);
-	const tempRef = useRef(null);
+	const chatRef = useRef<HTMLDivElement | null>(null);
+	const tempRef = useRef<HTMLDivElement | null>(null);
 
 	const queryClient = useQueryClient();
 
 	const navigate = useNavigate();
-	const { state: navigateState } = useLocation();
-	const roomId = useParams().roomId;
+	const { state: navigateState } = useLocation() as TypeChatRoomNavigateState;
+	const roomId = Number(useParams().roomId);
 
 	const sock = new SockJS(`${process.env.REACT_APP_API_URL}/iting`);
 	const client = StompJS.over(sock);
-	client.debug = null;
+	// client.debug();
 	const headers = {};
 
 	const { mutate: exitRoom } = useMutation(chatroomAPI.exitRoom, {
@@ -51,7 +53,7 @@ const ChatRoom = () => {
 			exitRoom(roomId);
 		}, {});
 	};
-	const socketReConnectFunc = (stompClient, callback) => {
+	const socketReConnectFunc = (stompClient: StompJS.Client, callback: () => void) => {
 		setTimeout(() => {
 			/** Stomp.client에는 ws.readyState라는 integer 값이 있는데, 소켓 연결이 완료되었을 경우 이 값은 1로 설정됨 */
 			/** 연결이 완료 되었으면 callback을 실행함 */
@@ -64,7 +66,7 @@ const ChatRoom = () => {
 		}, 1);
 	};
 
-	const sendMsg = (messageText) => {
+	const sendMsg = (messageText: string) => {
 		const sendMessage = {
 			enter: 'COMM',
 			messageType: 'TEXT',
@@ -77,7 +79,7 @@ const ChatRoom = () => {
 	};
 
 	const scrollToBottom = () => {
-		chatRef.current.scrollIntoView({ behavior: 'smooth' });
+		chatRef.current!.scrollIntoView({ behavior: 'smooth' });
 	};
 
 	useEffect(() => {
@@ -141,14 +143,14 @@ const ChatRoom = () => {
 		};
 	}, []);
 
-	/** 메세지가 쌓여 스크롤이 생기면 자동으로 스크롤을 내려주는 코드 */
 	useEffect(() => {
 		scrollToBottom();
+		console.log(messages);
 
 		const msglen = messages.length;
 		/**  메세지가 추가될 때 마다 EXIT인지 확인 후 호스트 퇴장? >>게스트 퇴장 */
 		if (messages[msglen - 1]?.enter === 'EXIT') {
-			if (!navigateState?.isHost) {
+			if (!navigateState.isHost) {
 				alert('호스트가 퇴장하였습니다.');
 				navigate('/viewer/room');
 			}

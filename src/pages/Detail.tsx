@@ -4,11 +4,9 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
-
 import instance from '../shared/axios';
 import NomalBadge from '../components/hashtag/NomalBadge';
 import { userContext } from '../context/UserProvider';
-
 import { userTypeTrans } from '../shared/sharedFn';
 import CommentCard from '../components/card/CommentCard';
 import SubmitForm from '../components/submitForm/SubmitForm';
@@ -16,18 +14,23 @@ import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { editPostingTime } from '../shared/sharedFn';
 
+import { TypeComment } from '../typings';
+
+interface ContentLikeBtnProps {
+	isLike?: boolean;
+	onClick?: any;
+}
+
 const Detail = () => {
 	const params = useParams();
-	const postingId = params.postingId;
+	const postingId = Number(params.postingId);
 	const queryClient = useQueryClient();
 	const [commentEditStateForSubmit, setCommentEditStateForSubmit] = useState(false);
 
-	// 로그인한 유저의 닉네임 가져오기
 	const context = useContext(userContext);
 	const { userInfo } = context.state;
 	const loginNickname = userInfo.nickname;
 
-	// 게시글 불러오기
 	const getPost = async () => {
 		const res = await instance.get(`/api/board/detail/${postingId}`);
 		return res.data;
@@ -36,10 +39,6 @@ const Detail = () => {
 	const { data } = useQuery(['post', postingId], getPost, {
 		refetchOnWindowFocus: false
 	});
-
-	// console.log(data);
-
-	// 게시글 기능관련
 
 	const contentLike = async () => {
 		if (data.like === true) {
@@ -80,12 +79,12 @@ const Detail = () => {
 				</TitleAndWriterBox>
 				<ContentAndHashtagBox>
 					<Content>
-						{data.posting_content.split('\n').map((line, idx) => {
+						{data.posting_content.split('\n').map((line: string, idx: number) => {
 							return <p key={idx}>{line}</p>;
 						})}
 					</Content>
 					<Hashtag>
-						{data.hashtag.map((d, idx) => (
+						{data.hashtag.map((d: string, idx: number) => (
 							<NomalBadge key={idx}>#{d}</NomalBadge>
 						))}
 					</Hashtag>
@@ -104,7 +103,7 @@ const Detail = () => {
 
 			<CommentBox>
 				<CommentListBox>
-					{data.comments.map((data, idx) => (
+					{data.comments.map((data: TypeComment, idx: number) => (
 						<CommentCard
 							key={idx}
 							data={data}
@@ -210,7 +209,7 @@ const CommentCount = styled.div`
 	}
 `;
 
-const ContentLikeBtn = styled.div`
+const ContentLikeBtn = styled.div<ContentLikeBtnProps>`
 	padding: 0.3rem;
 	color: ${(props) => (props.isLike ? '#3549FF' : '#656565')};
 	display: flex;
