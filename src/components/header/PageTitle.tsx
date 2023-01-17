@@ -5,8 +5,19 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import { postingsAPI } from '../../shared/api';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { AxiosError } from 'axios';
 
-const PageTitle = ({ title, isAction, postActions }) => {
+interface Props {
+	title: string;
+	isAction: boolean;
+	postActions: () => void;
+}
+
+interface PageTitleWrapperProps {
+	isShow: boolean;
+}
+
+const PageTitle = ({ title, isAction, postActions }: Props) => {
 	const queryClient = useQueryClient();
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -22,8 +33,8 @@ const PageTitle = ({ title, isAction, postActions }) => {
 			await queryClient.invalidateQueries(['postings']);
 			return navigate('/viewer/posting/list');
 		},
-		onError: (err) => {
-			if (err.response.status === 401) return;
+		onError: (err: AxiosError) => {
+			if (err.response?.status === 401) return;
 			alert('게시글을 삭제하지 못했습니다.');
 			navigate('/viewer/posting/list');
 		}
@@ -31,7 +42,7 @@ const PageTitle = ({ title, isAction, postActions }) => {
 	const postDeleteHandler = async () => {
 		const result = window.confirm('게시글을 삭제하시겠습니까?');
 		if (result) {
-			deletePosting(postingId);
+			deletePosting(parseInt(postingId!));
 		}
 	};
 
@@ -121,7 +132,7 @@ const PageTitleContent = styled.div`
 	}
 `;
 
-const HeaderActions = styled.div`
+const HeaderActions = styled.div<PageTitleWrapperProps>`
 	color: ${({ theme }) => theme.colors.mainBlue};
 	font-size: 16px;
 	letter-spacing: -0.3px;

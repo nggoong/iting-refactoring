@@ -7,8 +7,13 @@ import { editPostingTime } from '../../shared/sharedFn';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 import { userContext } from '../../context/UserProvider';
+import { TypePosting } from '../../typings';
 
-const PostingCard = ({ post }) => {
+interface Props {
+	post: TypePosting;
+}
+
+const PostingCard = ({ post }: Props) => {
 	const context = useContext(userContext);
 	const [isLike] = useState(() => (post.like ? true : false));
 	const { username } = context.state.userInfo;
@@ -42,9 +47,9 @@ const PostingCard = ({ post }) => {
 				<div className="posting-actions-icon">
 					<p className="posting-actions-icon-wrapper">
 						<IoChatboxEllipsesOutline />
-						{post.comment_count}
+						{post.comments_count}
 					</p>
-					<p className="posting-actions-icon-wrapper posting-actions-icon-like" style={{ color: isLike ? '#3549FF' : null }}>
+					<p className="posting-actions-icon-wrapper posting-actions-icon-like" style={{ color: isLike ? '#3549FF' : undefined }}>
 						<AiOutlineLike />
 						{post.like_count}
 					</p>

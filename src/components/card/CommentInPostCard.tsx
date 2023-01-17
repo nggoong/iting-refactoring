@@ -3,7 +3,16 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { editPostingTime } from '../../shared/sharedFn';
 
-const CommentInPostCard = ({ data }) => {
+interface Props {
+	data: {
+		posting_id: number;
+		comment_content: string;
+		localDateTime: Date;
+		title: string;
+	};
+}
+
+const CommentInPostCard = ({ data }: Props) => {
 	const navigate = useNavigate();
 
 	const cardClickHandler = () => {

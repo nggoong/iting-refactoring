@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const MyBubble = ({ messageTime, children }) => {
+interface Props {
+	messageTime: number;
+	children: string;
+}
+
+const MyBubble = ({ messageTime, children }: Props) => {
 	return (
 		<MyBubbleWrapper>
 			<MyBubbleBox>

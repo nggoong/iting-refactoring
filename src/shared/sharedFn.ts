@@ -1,4 +1,4 @@
-export const editPostingTime = (value: number) => {
+export const editPostingTime = (value: Date) => {
 	const milliSeconds = +new Date() - +new Date(value);
 	const seconds = milliSeconds / 1000;
 	if (seconds < 60) return `방금 전`;
