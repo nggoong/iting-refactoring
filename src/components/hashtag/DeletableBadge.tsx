@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { useLocation } from 'react-router-dom';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -10,7 +10,7 @@ interface Props {
 	setHashtag: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const DeletableBadge = ({ children, idx, hashtag, data, setHashtag }: React.PropsWithChildren<Props>) => {
+const DeletableBadge = ({ children, idx, hashtag, data, setHashtag }: PropsWithChildren<Props>) => {
 	const location = useLocation();
 	const pathname = location.pathname;
 

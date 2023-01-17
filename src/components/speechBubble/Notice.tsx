@@ -1,11 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
 
-interface Props {
-	children: ReactNode;
-}
-
-const Notice = ({ children }: Props) => {
+const Notice = ({ children }: PropsWithChildren) => {
 	return (
 		<NoticeWrapper>
 			<p>{children}</p>
