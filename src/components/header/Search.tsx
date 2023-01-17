@@ -4,26 +4,33 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { userContext } from '../../context/UserProvider';
 import AutoCompleteCard from '../card/AutoCompleteCard';
 import { chatroomAPI, postingsAPI } from '../../shared/api';
+import { AxiosResponse } from 'axios';
+import { TypeCompletedSearch } from '../../typings';
+
+interface AutoCompleteProps {
+	isShow?: string;
+}
 
 const Search = () => {
-	const [completedList, setCompletedList] = useState([]);
+	const [completedList, setCompletedList] = useState<TypeCompletedSearch[]>([]);
 	const location = useLocation();
 	const navigate = useNavigate();
 	const pathname = location.pathname;
 	const context = useContext(userContext);
 	const { username } = context.state.userInfo;
 	const [searchInput, setSearchInput] = useState('');
-	const timerRef = useRef(null);
+	const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
-	const debounceCompletedSearch = (callback, value) => {
+	const debounceCompletedSearch = (callback: (hashtag: string) => Promise<AxiosResponse<any, any>>, value: string) => {
 		if (timerRef.current) {
 			clearTimeout(timerRef.current);
 		}
-		timerRef.current = setTimeout(async () => {
+		timerRef.current! = setTimeout(async () => {
 			try {
 				const res = await callback(value);
+				console.log(res.data);
 				setCompletedList(res.data);
-			} catch (err) {
+			} catch (err: any) {
 				if (err.response && err.response.status === 500) {
 					alert('로그인이 필요합니다.');
 					setSearchInput('');
@@ -34,7 +41,7 @@ const Search = () => {
 		}, 400);
 	};
 
-	const searchChangeHandler = async (e) => {
+	const searchChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchInput(e.target.value);
 		if (!e.target.value || e.target.value.length <= 1) {
 			setCompletedList([]);
@@ -51,7 +58,7 @@ const Search = () => {
 		}
 	};
 
-	const submitHandler = (e) => {
+	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!username) {
 			alert('로그인이 필요합니다.');
@@ -87,7 +94,7 @@ const Search = () => {
 					{completedList?.length === 0 && searchInput && (
 						<NoData>{!username ? '로그인 후 이용해주세요' : '검색결과가 없습니다.'}</NoData>
 					)}
-					{(!completedList && completedList?.length < 2) ||
+					{(!searchInput && searchInput.length < 2) ||
 						completedList?.map((value, index) => {
 							return <AutoCompleteCard key={index} value={value} />;
 						})}
@@ -106,7 +113,7 @@ const Search = () => {
 					placeholder="ex) 해시태그 검색"
 					value={searchInput}
 					onChange={searchChangeHandler}
-					maxLength="6"
+					maxLength={6}
 				></input>
 			</div>
 		</SearchWrapper>
@@ -116,7 +123,6 @@ const Search = () => {
 export default Search;
 
 const SearchWrapper = styled.form`
-	/* position:relative; */
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
@@ -124,7 +130,6 @@ const SearchWrapper = styled.form`
 	height: 60px;
 	width: calc(100% - 40px);
 	max-width: 480px;
-	/* background:blue; */
 	margin: 0 auto;
 
 	.search-wrapper {
@@ -135,12 +140,10 @@ const SearchWrapper = styled.form`
 	.search-icon {
 		display: flex;
 		align-items: center;
-		/* background:red; */
 		position: absolute;
 		height: 46px;
 		top: 0;
 		left: 25px;
-		/* background: ${({ theme }) => theme.colors.searchBlue}; */
 	}
 
 	input {
@@ -148,7 +151,6 @@ const SearchWrapper = styled.form`
 		width: 100%;
 		border-radius: 30px;
 		box-sizing: border-box;
-		/* font-weight:600; */
 		background: ${({ theme }) => theme.colors.searchBlue};
 		color: ${({ theme }) => theme.colors.darkGray};
 		border: 2px solid lightgray;
@@ -168,7 +170,7 @@ const SearchWrapper = styled.form`
 	}
 `;
 
-const AutoComplete = styled.div`
+const AutoComplete = styled.div<AutoCompleteProps>`
 	position: absolute;
 	top: 50%;
 	left: 0;
