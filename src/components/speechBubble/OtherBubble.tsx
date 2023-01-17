@@ -3,10 +3,9 @@ import styled from 'styled-components';
 
 interface Props {
 	messageTime: string;
-	children: string;
 }
 
-const OtherBubble = ({ messageTime, children }: Props) => {
+const OtherBubble = ({ messageTime, children }: React.PropsWithChildren<Props>) => {
 	return (
 		<OtherBubbleWrapper>
 			<OtherBubbleBox>
