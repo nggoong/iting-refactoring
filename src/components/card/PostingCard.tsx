@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import NomalBadge from '../hashtag/NomalBadge';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,10 @@ const PostingCard = ({ post }: Props) => {
 		navigate(`/detail/posting/${post.posting_id}`);
 	};
 
+	useEffect(() => {
+		console.log(post);
+	}, [])
+
 	return (
 		<PostingCardWrapper onClick={cardClickHandler}>
 			<PostingCardBody>
@@ -47,7 +51,7 @@ const PostingCard = ({ post }: Props) => {
 				<div className="posting-actions-icon">
 					<p className="posting-actions-icon-wrapper">
 						<IoChatboxEllipsesOutline />
-						{post.comments_count}
+						{post.comment_count}
 					</p>
 					<p className="posting-actions-icon-wrapper posting-actions-icon-like" style={{ color: isLike ? '#3549FF' : undefined }}>
 						<AiOutlineLike />

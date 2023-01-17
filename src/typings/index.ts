@@ -9,7 +9,7 @@ export interface TypePosting {
 	hashtag: string[];
 	date: Date;
 	comments: TypeComment[];
-	comments_count: number;
+	comment_count: number;
 }
 
 export interface TypePostPosting {
