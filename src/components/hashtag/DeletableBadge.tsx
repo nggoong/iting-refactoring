@@ -3,12 +3,20 @@ import { useLocation } from 'react-router-dom';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
-const DeletableBadge = ({ children, idx, hashtag, data, setHashtag }) => {
+interface Props {
+	children: string;
+	idx: number;
+	hashtag: string[];
+	data?: any;
+	setHashtag: React.Dispatch<React.SetStateAction<any>>;
+}
+
+const DeletableBadge = ({ children, idx, hashtag, data, setHashtag }: Props) => {
 	const location = useLocation();
 	const pathname = location.pathname;
 
 	const handleDelete = () => {
-		let tempHashtag;
+		let tempHashtag: string[];
 		if (pathname.includes('/room')) {
 			tempHashtag = [...hashtag];
 			tempHashtag.splice(idx, 1);

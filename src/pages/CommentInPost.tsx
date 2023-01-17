@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet';
 import Header from '../components/header/Header';
 import CommentInPostCard from '../components/card/CommentInPostCard';
 
-import { TypeComment } from '../typings';
+import { TypeCommentInPost } from '../typings';
 
 const CommentInPost = () => {
 	const { ref, inView } = useInView();
@@ -41,7 +41,7 @@ const CommentInPost = () => {
 			<CardList>
 				{data?.pages.map((page, index) => (
 					<Page key={index}>
-						{page.posts.map((data: TypeComment, index: number) => (
+						{page.posts.map((data: TypeCommentInPost, index: number) => (
 							<CommentInPostCard key={index} data={data} />
 						))}
 					</Page>

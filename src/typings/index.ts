@@ -23,6 +23,14 @@ export interface TypePostEditing {
 	newData: TypePostPosting;
 }
 
+export interface TypeCommentInPost {
+	posting_id: number;
+	title: string;
+	comment_content: string;
+	comment_count: number;
+	localDateTime: Date;
+}
+
 export interface TypeComment {
 	id: number;
 	nickname: string;

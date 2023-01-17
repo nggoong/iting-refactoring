@@ -4,15 +4,15 @@ import Search from './Search';
 import PageTitle from './PageTitle';
 
 interface Props {
-	title: string;
-	isAction: boolean;
-	postActions: () => void;
+	title?: string;
+	isAction?: boolean;
+	postActions?: () => void;
 }
 
 const Header = ({ title, isAction, postActions }: Props) => {
 	return (
 		<HeaderWrapper>
-			<PageTitle title={title} isAction={isAction} postActions={postActions}></PageTitle>
+			<PageTitle title={title!} isAction={isAction!} postActions={postActions!}></PageTitle>
 			<Search></Search>
 		</HeaderWrapper>
 	);

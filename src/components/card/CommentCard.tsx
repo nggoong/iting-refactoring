@@ -10,7 +10,7 @@ import { userContext } from '../../context/UserProvider';
 
 interface Props {
 	data: any;
-	postingId: string;
+	postingId: number;
 	commentEditStateForSubmit: boolean;
 	setCommentEditStateForSubmit: React.Dispatch<React.SetStateAction<boolean>>;
 }

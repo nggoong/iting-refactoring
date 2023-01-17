@@ -2,14 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { editPostingTime } from '../../shared/sharedFn';
+import { TypeCommentInPost } from '../../typings';
 
 interface Props {
-	data: {
-		posting_id: number;
-		comment_content: string;
-		localDateTime: Date;
-		title: string;
-	};
+	data: TypeCommentInPost;
 }
 
 const CommentInPostCard = ({ data }: Props) => {
