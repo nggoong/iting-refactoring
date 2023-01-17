@@ -94,3 +94,8 @@ export interface TypeChatRoomNavigateState {
 		isHost: boolean;
 	};
 }
+
+export interface TypeCompletedSearch {
+	hashtag: string;
+	count: number;
+}
