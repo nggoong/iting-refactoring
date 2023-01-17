@@ -41,7 +41,7 @@ const CommentInPost = () => {
 			<CardList>
 				{data?.pages.map((page, index) => (
 					<Page key={index}>
-						{page.posts.map((data:TypeComment, index:number) => (
+						{page.posts.map((data: TypeComment, index: number) => (
 							<CommentInPostCard key={index} data={data} />
 						))}
 					</Page>
