@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import NomalBadge from '../hashtag/NomalBadge';
 import { useNavigate } from 'react-router-dom';
@@ -26,10 +26,6 @@ const PostingCard = ({ post }: Props) => {
 		}
 		navigate(`/detail/posting/${post.posting_id}`);
 	};
-
-	useEffect(() => {
-		console.log(post);
-	}, [])
 
 	return (
 		<PostingCardWrapper onClick={cardClickHandler}>
