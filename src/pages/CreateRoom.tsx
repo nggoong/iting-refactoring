@@ -17,7 +17,7 @@ const CreateRoom = () => {
 		titleInput: '',
 		hashtagInput: ''
 	});
-	const [hashtag, setHashtag] = useState([]);
+	const [hashtag, setHashtag] = useState<string[]>([]);
 
 	const { mutate: createRoom, isError: createRoomError } = useMutation(chatroomAPI.createChatRoom, {
 		onSuccess: (data) => {
@@ -25,11 +25,11 @@ const CreateRoom = () => {
 		}
 	});
 
-	const InputsChangeHandler = (e) => {
+	const InputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInputs({ ...inputs, [e.target.name]: e.target.value });
 	};
 
-	const keyupSpace = (e) => {
+	const keyupSpace = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.code === 'Space') {
 			if (!inputs.hashtagInput.trim()) {
 				setInputs({ ...inputs, hashtagInput: '' });
@@ -46,7 +46,7 @@ const CreateRoom = () => {
 		}
 	};
 
-	const hashtagSubmitHandler = (e) => {
+	const hashtagSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!inputs.hashtagInput) {
 			return;
@@ -124,11 +124,9 @@ const CreateRoom = () => {
 export default CreateRoom;
 
 const CreateRoomWrapper = styled.div`
-	/* position:relative; */
 	width: calc(100% - 40px);
 	max-width: 480px;
 	padding-top: 100px;
-	/* background:red; */
 	margin: 0 auto;
 `;
 

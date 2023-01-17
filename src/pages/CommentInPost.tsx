@@ -8,6 +8,8 @@ import { Helmet } from 'react-helmet';
 import Header from '../components/header/Header';
 import CommentInPostCard from '../components/card/CommentInPostCard';
 
+import { TypeComment } from '../typings';
+
 const CommentInPost = () => {
 	const { ref, inView } = useInView();
 
@@ -36,11 +38,10 @@ const CommentInPost = () => {
 				<link rel="icon" type="image/png" sizes="16x16" href="16.ico" />
 			</Helmet>
 			<Header title="댓글 단 글" isAction={true} />
-			{/* data.pages[0].posts[0].nickname */}
 			<CardList>
-				{data.pages.map((page, index) => (
+				{data?.pages.map((page, index) => (
 					<Page key={index}>
-						{page.posts.map((data, index) => (
+						{page.posts.map((data:TypeComment, index:number) => (
 							<CommentInPostCard key={index} data={data} />
 						))}
 					</Page>
