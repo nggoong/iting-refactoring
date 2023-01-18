@@ -21,8 +21,6 @@ export const postingsAPI = {
 	},
 
 	postEditing: async ({ postingId, newData }: TypePostEditing) => {
-		console.log(postingId);
-		console.log(newData);
 		await instance.put(`/api/board/${postingId}`, newData);
 	},
 	postDelete: async (postingId: number) => {
@@ -42,6 +40,16 @@ export const postingsAPI = {
 		const { content } = res.data;
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
+	},
+	fetchPostDetail: async (postingId: number) => {
+		const res = await instance.get(`/api/board/detail/${postingId}`);
+		return res.data;
+	},
+	postingLike: async (postingId: number) => {
+		return instance.post(`/api/board/${postingId}/likes`);
+	},
+	postingLikeDelete: async (postingId: number) => {
+		return instance.delete(`/api/board/${postingId}/likes`);
 	}
 };
 
@@ -74,5 +82,11 @@ export const chatroomAPI = {
 	},
 	fetchAutoCompleteRoomList: async (hashtag: string) => {
 		return await instance.get(`/api/hashtags/rooms?hashtag=${hashtag}`);
+	}
+};
+
+export const commentsAPI = {
+	addComment: async (postingId: number, comment: string) => {
+		return await instance.post(`/api/board/${postingId}/comment`, { content: comment });
 	}
 };

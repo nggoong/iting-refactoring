@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
-import instance from '../shared/axios';
 import NomalBadge from '../components/hashtag/NomalBadge';
 import { userContext } from '../context/UserProvider';
 import { userTypeTrans } from '../shared/sharedFn';
@@ -13,6 +12,7 @@ import SubmitForm from '../components/submitForm/SubmitForm';
 import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { editPostingTime } from '../shared/sharedFn';
+import { postingsAPI } from '../shared/api';
 
 import { TypeComment } from '../typings';
 
@@ -31,20 +31,16 @@ const Detail = () => {
 	const { userInfo } = context.state;
 	const loginNickname = userInfo.nickname;
 
-	const getPost = async () => {
-		const res = await instance.get(`/api/board/detail/${postingId}`);
-		return res.data;
-	};
-
-	const { data } = useQuery(['post', postingId], getPost, {
+	const { data } = useQuery(['post', postingId], () => postingsAPI.fetchPostDetail(postingId), {
 		refetchOnWindowFocus: false
 	});
 
 	const contentLike = async () => {
+		const { postingLike, postingLikeDelete } = postingsAPI;
 		if (data.like === true) {
-			return await instance.delete(`/api/board/${postingId}/likes`);
+			postingLikeDelete(postingId);
 		} else {
-			return await instance.post(`/api/board/${postingId}/likes`);
+			postingLike(postingId);
 		}
 	};
 
