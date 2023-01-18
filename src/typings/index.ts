@@ -99,3 +99,7 @@ export interface TypeCompletedSearch {
 	hashtag: string;
 	count: number;
 }
+
+export interface TypeAddComment {
+	content: string;
+}
