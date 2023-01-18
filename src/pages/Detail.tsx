@@ -17,8 +17,8 @@ import { editPostingTime } from '../shared/sharedFn';
 import { TypeComment } from '../typings';
 
 interface ContentLikeBtnProps {
-	isLike?: boolean;
-	onClick?: any;
+	isLike: boolean;
+	onClick: any;
 }
 
 const Detail = () => {

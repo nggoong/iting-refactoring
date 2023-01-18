@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import styled, { css } from 'styled-components';
 import instance from '../../shared/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +7,7 @@ import { BiRightArrowCircle } from 'react-icons/bi';
 
 interface CommentAddBoxProps {
 	isShow?: boolean;
-	onSubmit?: any;
+	onSubmit: any;
 }
 
 interface Props {
@@ -58,7 +58,7 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 	);
 };
 
-export default React.memo(SubmitForm);
+export default memo(SubmitForm);
 
 const CommentAddBox = styled.form<CommentAddBoxProps>`
 	background: #efefef;

@@ -8,7 +8,7 @@ import { AxiosResponse } from 'axios';
 import { TypeCompletedSearch } from '../../typings';
 
 interface AutoCompleteProps {
-	isShow?: string;
+	isShow: string;
 }
 
 const Search = () => {
