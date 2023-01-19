@@ -94,5 +94,11 @@ export const commentsAPI = {
 	},
 	editComment: async (data: TypeEditComment) => {
 		return await instance.put(`/api/board/${data.postingId}/comment/${data.commentId}`, data.data);
+	},
+	commentLike: async (id: string) => {
+		return await instance.post(`/api/comment/${id}/likes`);
+	},
+	DeleteCommentLike: async (id: string) => {
+		return await instance.delete(`/api/comment/${id}/likes`);
 	}
 };

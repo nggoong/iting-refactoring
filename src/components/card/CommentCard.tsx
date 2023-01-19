@@ -4,8 +4,6 @@ import { userTypeTrans } from '../../shared/sharedFn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { editPostingTime } from '../../shared/sharedFn';
-
-import instance from '../../shared/axios';
 import { userContext } from '../../context/UserProvider';
 import { commentsAPI } from '../../shared/api';
 
@@ -40,26 +38,35 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 	const { mutate: commentEditHandler } = useMutation(commentsAPI.editComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
+		},
+		onError: (err: any) => {
+			alert(err.response.data);
 		}
 	});
 
 	const { mutate: commentDelHandler } = useMutation(commentsAPI.deleteComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
+		},
+		onError: (err: any) => {
+			alert(err.response.data);
 		}
 	});
 
 	const commentLike = async (id: string) => {
-		if (data.like === true) {
-			return await instance.delete(`/api/comment/${id}/likes`);
+		if (data.like) {
+			return commentsAPI.DeleteCommentLike(id);
 		} else {
-			return await instance.post(`/api/comment/${id}/likes`);
+			return commentsAPI.commentLike(id);
 		}
 	};
 
 	const { mutate: commentlikeHandler } = useMutation(commentLike, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
+		},
+		onError(err: any) {
+			alert(err.response.data);
 		}
 	});
 
