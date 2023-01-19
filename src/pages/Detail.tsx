@@ -33,6 +33,11 @@ const Detail = () => {
 	const loginNickname = userInfo.nickname;
 
 	const getPost = async () => {
+		console.log(postingsAPI.postEditing);
+		console.log(postingsAPI.fetchCommentInPostListWithScroll);
+		console.log(postingsAPI.fetchPostDetail);
+		console.log(postingsAPI.postingLike);
+		console.log(postingsAPI.postingLikeDelete);
 		const res = await instance.get(`/api/board/detail/${postingId}`);
 		return res.data;
 	};
@@ -41,12 +46,14 @@ const Detail = () => {
 		refetchOnWindowFocus: false
 	});
 
-	const contentLike = async () => {
-		const { postingLike, postingLikeDelete } = postingsAPI;
-		if (data.like === true) {
-			postingLikeDelete(postingId);
+	const contentLike = (postingId: number) => {
+		if (data.like) {
+			console.log(data.like);
+			return postingsAPI.postingLikeDelete(postingId);
 		} else {
-			postingLike(postingId);
+			console.log(data.like);
+			console.log(postingId);
+			return postingsAPI.postingLike(postingId);
 		}
 	};
 
@@ -96,7 +103,7 @@ const Detail = () => {
 						<IoChatboxEllipsesOutline />
 						{data.comments.length}
 					</CommentCount>
-					<ContentLikeBtn onClick={contentlikeHandler} isLike={data.like}>
+					<ContentLikeBtn onClick={() => contentlikeHandler(postingId)} isLike={data.like}>
 						<AiOutlineLike />
 						{data.like_count}
 					</ContentLikeBtn>

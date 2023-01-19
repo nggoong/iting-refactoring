@@ -15,6 +15,7 @@ export const postingsAPI = {
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
 	},
+
 	postPosting: async (newData: TypePostPosting) => {
 		const res = await instance.post('/api/board', newData);
 		return res.data;
@@ -23,33 +24,43 @@ export const postingsAPI = {
 	postEditing: async ({ postingId, newData }: TypePostEditing) => {
 		await instance.put(`/api/board/${postingId}`, newData);
 	},
+
 	postDelete: async (postingId: number) => {
 		await instance.delete(`/api/board/${postingId}`);
 	},
+
 	fetchSearchPostingsListWithScroll: async (pageParams: number, hashtag: string) => {
 		const res = await instance.get(`/api/search/postings?hashtag=${hashtag}&page=${pageParams}&size=10`);
 		const { content } = res.data;
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
 	},
+
 	fetchAutoCompletePostingList: async (hashtag: string) => {
 		return await instance.get(`/api/hashtags/posts?hashtag=${hashtag}`);
 	},
+
 	fetchCommentInPostListWithScroll: async (pageParams: number) => {
 		const res = await instance.get(`/api/mypage/comments/postings?page=${pageParams}&size=10`);
 		const { content } = res.data;
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
 	},
+
 	fetchPostDetail: async (postingId: number) => {
 		const res = await instance.get(`/api/board/detail/${postingId}`);
 		return res.data;
 	},
+
 	postingLike: async (postingId: number) => {
-		return instance.post(`/api/board/${postingId}/likes`);
+		console.log('axios run!');
+		console.log(postingId);
+		return await instance.post(`/api/board/${postingId}/likes`);
 	},
+
 	postingLikeDelete: async (postingId: number) => {
-		return instance.delete(`/api/board/${postingId}/likes`);
+		console.log('axios run!');
+		return await instance.delete(`/api/board/${postingId}/likes`);
 	}
 };
 
