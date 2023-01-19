@@ -111,3 +111,9 @@ export interface TypeDeleteComment {
 	postingId: number;
 	commentId: string;
 }
+
+export interface TypeEditComment extends TypeDeleteComment {
+	data: {
+		content: string;
+	};
+}

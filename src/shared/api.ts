@@ -1,5 +1,5 @@
 import instance from './axios';
-import { TypePostPosting, TypePostEditing, TypeAddComment, TypeDeleteComment } from '../typings';
+import { TypePostPosting, TypePostEditing, TypeAddComment, TypeDeleteComment, TypeEditComment } from '../typings';
 
 export const postingsAPI = {
 	fetchPostingsListWithScroll: async (pageParams: number, category: string) => {
@@ -91,5 +91,8 @@ export const commentsAPI = {
 	},
 	deleteComment: async (data: TypeDeleteComment) => {
 		return await instance.delete(`/api/board/${data.postingId}/comment/${data.commentId}`);
+	},
+	editComment: async (data: TypeEditComment) => {
+		return await instance.put(`/api/board/${data.postingId}/comment/${data.commentId}`, data.data);
 	}
 };

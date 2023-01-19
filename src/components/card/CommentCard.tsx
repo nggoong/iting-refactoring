@@ -37,12 +37,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 	const { userInfo } = context.state;
 	const loginNickname = userInfo.nickname;
 
-	const editComment = async (commentId: string) => {
-		const comment = { content: commentEditInput.current?.value };
-		await instance.put(`/api/board/${postingId}/comment/${commentId}`, comment);
-	};
-
-	const { mutate: commentEditHandler } = useMutation(editComment, {
+	const { mutate: commentEditHandler } = useMutation(commentsAPI.editComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
 		}
@@ -70,7 +65,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 
 	const deleteBtnClickHandler = () => {
 		const result = window.confirm('댓글을 삭제하시겠습니까?');
-		if (result) commentDelHandler({ postingId: postingId, commentId: `${data.id}` });
+		if (result) commentDelHandler({ postingId, commentId: `${data.id}` });
 		else return;
 	};
 
@@ -95,7 +90,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 						</CommentEditCancelBtn>
 						<CommentEditSaveBtn
 							onClick={() => {
-								commentEditHandler(`${data.id}`);
+								commentEditHandler({ postingId, commentId: `${data.id}`, data: { content: commentEditInput.current!.value } });
 								setCommentEditState(false);
 								setCommentEditStateForSubmit(false);
 							}}
