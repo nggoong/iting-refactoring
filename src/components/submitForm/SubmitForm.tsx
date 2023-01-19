@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { BiRightArrowCircle } from 'react-icons/bi';
-
 import { commentsAPI } from '../../shared/api';
 
 interface CommentAddBoxProps {
@@ -23,11 +22,6 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 	const queryClient = useQueryClient();
 	const location = useLocation();
 
-	// const addComment = async () => {
-	// 	const comment = { content: commentInput.current!.value };
-	// 	return await instance.post(`/api/board/${postingId}/comment`, comment);
-	// };
-
 	const { mutate: commentAddHandler } = useMutation(commentsAPI.addComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
@@ -42,7 +36,7 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 		if (location.pathname.includes('/detail/room/chat')) {
 			sendMsg!(commentInput.current!.value);
 			commentInput.current!.value = '';
-		} else commentAddHandler(postingId!, commentInput.current!.value);
+		} else commentAddHandler({ postingId: postingId!, data: { content: commentInput.current!.value } });
 	};
 
 	return (

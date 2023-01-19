@@ -1,5 +1,5 @@
 import instance from './axios';
-import { TypePostPosting, TypePostEditing } from '../typings';
+import { TypePostPosting, TypePostEditing, TypeAddComment } from '../typings';
 
 export const postingsAPI = {
 	fetchPostingsListWithScroll: async (pageParams: number, category: string) => {
@@ -86,7 +86,7 @@ export const chatroomAPI = {
 };
 
 export const commentsAPI = {
-	addComment: async (postingId: number, comment: string) => {
-		return await instance.post(`/api/board/${postingId}/comment`, { content: comment });
+	addComment: async (data: TypeAddComment) => {
+		return await instance.post(`/api/board/${data.postingId}/comment`, data.data);
 	}
 };

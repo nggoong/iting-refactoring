@@ -13,6 +13,7 @@ import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { editPostingTime } from '../shared/sharedFn';
 import { postingsAPI } from '../shared/api';
+import instance from '../shared/axios';
 
 import { TypeComment } from '../typings';
 
@@ -31,7 +32,12 @@ const Detail = () => {
 	const { userInfo } = context.state;
 	const loginNickname = userInfo.nickname;
 
-	const { data } = useQuery(['post', postingId], () => postingsAPI.fetchPostDetail(postingId), {
+	const getPost = async () => {
+		const res = await instance.get(`/api/board/detail/${postingId}`);
+		return res.data;
+	};
+
+	const { data } = useQuery(['post', postingId], getPost, {
 		refetchOnWindowFocus: false
 	});
 

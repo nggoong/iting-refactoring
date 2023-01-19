@@ -101,5 +101,8 @@ export interface TypeCompletedSearch {
 }
 
 export interface TypeAddComment {
-	content: string;
+	postingId: number;
+	data: {
+		content: string;
+	};
 }
