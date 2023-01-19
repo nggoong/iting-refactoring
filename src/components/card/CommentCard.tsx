@@ -7,6 +7,7 @@ import { editPostingTime } from '../../shared/sharedFn';
 
 import instance from '../../shared/axios';
 import { userContext } from '../../context/UserProvider';
+import { commentsAPI } from '../../shared/api';
 
 interface Props {
 	data: any;
@@ -32,13 +33,10 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 	const queryClient = useQueryClient();
 
 	const [commentEditState, setCommentEditState] = useState(false);
-
-	// 로그인한 유저의 닉네임 가져오기
 	const context = useContext(userContext);
 	const { userInfo } = context.state;
 	const loginNickname = userInfo.nickname;
 
-	// 댓글 기능관련
 	const editComment = async (commentId: string) => {
 		const comment = { content: commentEditInput.current?.value };
 		await instance.put(`/api/board/${postingId}/comment/${commentId}`, comment);
@@ -50,14 +48,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 		}
 	});
 
-	const deleteComment = async (commentId: string) => {
-		const result = window.confirm('댓글을 삭제하시겠습니까?');
-		if (result) {
-			await instance.delete(`/api/board/${postingId}/comment/${commentId}`);
-		}
-	};
-
-	const { mutate: commentDelHandler } = useMutation(deleteComment, {
+	const { mutate: commentDelHandler } = useMutation(commentsAPI.deleteComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
 		}
@@ -77,7 +68,11 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 		}
 	});
 
-	// 시간세팅
+	const deleteBtnClickHandler = () => {
+		const result = window.confirm('댓글을 삭제하시겠습니까?');
+		if (result) commentDelHandler({ postingId: postingId, commentId: `${data.id}` });
+		else return;
+	};
 
 	return (
 		<>
@@ -134,13 +129,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 								>
 									수정
 								</CommentEdit>
-								<CommentDel
-									onClick={() => {
-										commentDelHandler(`${data.id}`);
-									}}
-								>
-									삭제
-								</CommentDel>
+								<CommentDel onClick={deleteBtnClickHandler}>삭제</CommentDel>
 							</CommentEditAndDelBox>
 						</>
 					) : (

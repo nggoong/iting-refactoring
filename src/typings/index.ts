@@ -106,3 +106,8 @@ export interface TypeAddComment {
 		content: string;
 	};
 }
+
+export interface TypeDeleteComment {
+	postingId: number;
+	commentId: string;
+}
