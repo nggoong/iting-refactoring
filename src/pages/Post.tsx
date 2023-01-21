@@ -1,23 +1,21 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { WhiteBackground, HRLineDiv } from '../style/sharedStyle';
-import { userContext } from '../context/UserProvider';
 import Header from '../components/header/Header';
 import DeletableBadge from '../components/hashtag/DeletableBadge';
 import { hashtagValidation } from '../shared/sharedFn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postingsAPI } from '../shared/api';
-
 import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
 import { TypePostPosting } from '../typings';
+import useUserState from '../hooks/useUserState';
 
 const Post = () => {
 	const queryClient = useQueryClient();
 	const [hashInput, setHashInput] = useState('');
-	const userInfoContext = useContext(userContext);
-	const { userInfo } = userInfoContext.state;
+	const userState = useUserState();
 	const hashRef = useRef<HTMLDivElement | null>(null);
 	const [postData, setPostData] = useState<TypePostPosting>({
 		title: '',
@@ -124,7 +122,7 @@ const Post = () => {
 				const postInfo = await instance.get(`/api/board/detail/${postingId}`);
 				const data = postInfo.data;
 
-				if (data.nickname !== userInfo.nickname) {
+				if (data.nickname !== userState.nickname) {
 					alert('수정 권한이 없습니다.');
 					navigate(-1);
 					return;

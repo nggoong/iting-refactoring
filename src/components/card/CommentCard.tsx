@@ -1,11 +1,11 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { userTypeTrans } from '../../shared/sharedFn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { editPostingTime } from '../../shared/sharedFn';
-import { userContext } from '../../context/UserProvider';
 import { commentsAPI } from '../../shared/api';
+import useUserState from '../../hooks/useUserState';
 
 interface Props {
 	data: any;
@@ -31,9 +31,8 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 	const queryClient = useQueryClient();
 
 	const [commentEditState, setCommentEditState] = useState(false);
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
-	const loginNickname = userInfo.nickname;
+	const userState = useUserState();
+	const loginNickname = userState.nickname;
 
 	const { mutate: commentEditHandler } = useMutation(commentsAPI.editComment, {
 		onSuccess: () => {

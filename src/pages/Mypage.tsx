@@ -1,17 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Header from '../components/header/Header';
 import ManagementCard from '../components/card/ManagementCard';
-import { userContext } from '../context/UserProvider';
 import { userTypeTrans } from '../shared/sharedFn';
+import useUserState from '../hooks/useUserState';
 
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 const Mypage = () => {
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
-
+	const userState = useUserState();
 	const navigate = useNavigate();
 
 	return (
@@ -38,10 +36,10 @@ const Mypage = () => {
 					</ProfilePicture>
 					<MemberNameTypeAndEmail>
 						<MemberNameAndType>
-							<MemberName>{userInfo.nickname}</MemberName>
-							<MemberType>{userTypeTrans(userInfo.user_type)}</MemberType>
+							<MemberName>{userState.nickname}</MemberName>
+							<MemberType>{userTypeTrans(userState.user_type)}</MemberType>
 						</MemberNameAndType>
-						<MemberEmail>{userInfo.username}</MemberEmail>
+						<MemberEmail>{userState.username}</MemberEmail>
 					</MemberNameTypeAndEmail>
 				</MemberInfo>
 				<CategoryBox>
@@ -94,7 +92,7 @@ const Mypage = () => {
 					pathUrl="/mypage/myinfomanage"
 				/>
 				<ManagementCard
-					isShow={!userInfo.kakao}
+					isShow={!userState.isKakao}
 					managementType="비밀번호 변경"
 					svg={
 						<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">

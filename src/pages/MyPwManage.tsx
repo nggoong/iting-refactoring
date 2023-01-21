@@ -1,14 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
-import { userContext } from '../context/UserProvider';
 import Header from '../components/header/Header';
 import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 
 import { TypeChangePassword } from '../typings';
+import useUserState from '../hooks/useUserState';
 
 const MyPwManage = () => {
 	const {
@@ -20,9 +19,7 @@ const MyPwManage = () => {
 		mode: 'onChange'
 	});
 	const navigate = useNavigate();
-
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
+	const userState = useUserState();
 	const [isAbleSubmit, setIsAbleSubmit] = useState(false);
 
 	const myPwChangeHandler = async (data: TypeChangePassword) => {
@@ -42,7 +39,7 @@ const MyPwManage = () => {
 	};
 
 	useEffect(() => {
-		if (userInfo.kakao) {
+		if (userState.isKakao) {
 			alert('카카오회원은 비밀번호 변경을 할 수 없습니다.');
 			return navigate('/mypage');
 		}

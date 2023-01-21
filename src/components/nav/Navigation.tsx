@@ -1,21 +1,19 @@
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { userContext } from '../../context/UserProvider';
 import IndexInfo from './NavIndexInfo';
+import useUserState from '../../hooks/useUserState';
 
 const Navigation = () => {
-	const context = useContext(userContext);
-	const { username } = context.state.userInfo;
-
+	const userState = useUserState();
 	const navContentRef = useRef<HTMLDivElement | null>(null);
-
 	const navigate = useNavigate();
 	const location = useLocation();
 	const pathname = location.pathname;
+
 	const iconClickHandler = (e: React.MouseEvent<HTMLParagraphElement>) => {
 		const { url } = e.currentTarget.dataset;
-		if (!username) {
+		if (!userState.username) {
 			if (url === '/mypage') navigate('/login');
 			else if (url === '/viewer/posting/list') return;
 			else {
