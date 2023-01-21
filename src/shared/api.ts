@@ -53,13 +53,10 @@ export const postingsAPI = {
 	},
 
 	postingLike: async (postingId: number) => {
-		console.log('axios run!');
-		console.log(postingId);
 		return await instance.post(`/api/board/${postingId}/likes`);
 	},
 
 	postingLikeDelete: async (postingId: number) => {
-		console.log('axios run!');
 		return await instance.delete(`/api/board/${postingId}/likes`);
 	}
 };

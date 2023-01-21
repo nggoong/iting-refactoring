@@ -13,7 +13,6 @@ import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { editPostingTime } from '../shared/sharedFn';
 import { postingsAPI } from '../shared/api';
-import instance from '../shared/axios';
 
 import { TypeComment } from '../typings';
 
@@ -32,27 +31,14 @@ const Detail = () => {
 	const { userInfo } = context.state;
 	const loginNickname = userInfo.nickname;
 
-	const getPost = async () => {
-		console.log(postingsAPI.postEditing);
-		console.log(postingsAPI.fetchCommentInPostListWithScroll);
-		console.log(postingsAPI.fetchPostDetail);
-		console.log(postingsAPI.postingLike);
-		console.log(postingsAPI.postingLikeDelete);
-		const res = await instance.get(`/api/board/detail/${postingId}`);
-		return res.data;
-	};
-
-	const { data } = useQuery(['post', postingId], getPost, {
+	const { data } = useQuery(['post', postingId], () => postingsAPI.fetchPostDetail(postingId), {
 		refetchOnWindowFocus: false
 	});
 
 	const contentLike = (postingId: number) => {
 		if (data.like) {
-			console.log(data.like);
 			return postingsAPI.postingLikeDelete(postingId);
 		} else {
-			console.log(data.like);
-			console.log(postingId);
 			return postingsAPI.postingLike(postingId);
 		}
 	};
