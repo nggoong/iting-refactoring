@@ -1,4 +1,4 @@
-import React, { useState, createContext, PropsWithChildren } from 'react';
+import React, { useReducer, createContext, PropsWithChildren, Dispatch } from 'react';
 
 interface UserState {
 	username: string;
@@ -7,17 +7,42 @@ interface UserState {
 	isKakao: boolean;
 }
 
-export const userContext = createContext<UserState | any>({});
+const defaultUserInfo = {
+	username: '',
+	nickname: '',
+	user_type: '',
+	isKakao: false
+};
+
+type Action = { type: 'SET_DEFAULT' } | { type: 'SET_INFO'; info: UserState };
+type TypeUserDispatch = Dispatch<Action>;
+
+export const userContextState = createContext<UserState | undefined>(undefined);
+
+export const userContextDispatch = createContext<TypeUserDispatch | undefined>(undefined);
+
+const userReudcer = (state: UserState = defaultUserInfo, action: Action) => {
+	switch (action.type) {
+		case 'SET_DEFAULT': {
+			return defaultUserInfo;
+		}
+		case 'SET_INFO': {
+			return { ...state, ...action.info };
+		}
+		default: {
+			return state;
+		}
+	}
+};
 
 const UserProvider = ({ children }: PropsWithChildren) => {
-	const [userInfo, setUserInfo] = useState({});
+	const [userInfo, dispatch] = useReducer(userReudcer, defaultUserInfo);
 
-	const value = {
-		state: { userInfo },
-		actions: { setUserInfo }
-	};
-
-	return <userContext.Provider value={value}>{children}</userContext.Provider>;
+	return (
+		<userContextDispatch.Provider value={dispatch}>
+			<userContextState.Provider value={userInfo}>{children}</userContextState.Provider>
+		</userContextDispatch.Provider>
+	);
 };
 
 export default UserProvider;
