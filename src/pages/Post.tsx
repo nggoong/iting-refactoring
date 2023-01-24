@@ -98,17 +98,12 @@ const Post = () => {
 	});
 
 	const postSubmitHandler = () => {
-		const { title, posting_content, hashtag } = postData;
+		const { title, posting_content } = postData;
 		if (!title || !posting_content) {
 			alert('제목과 내용을 모두 채워주세요!');
 			return;
 		}
-		const newData = {
-			title,
-			posting_content,
-			hashtag
-		};
-		submitPosting(newData);
+		submitPosting({ ...postData });
 	};
 
 	const postEditHandler = () => {
