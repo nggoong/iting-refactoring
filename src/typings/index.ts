@@ -83,7 +83,7 @@ export interface TypeChangePassword {
 	confirmChangePassword: string;
 }
 
-export interface TypeChangeNickname {
+export interface TypeChangeUserInfo {
 	nickname: string;
 	user_type: string;
 }

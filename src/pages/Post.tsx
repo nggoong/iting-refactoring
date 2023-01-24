@@ -7,7 +7,6 @@ import DeletableBadge from '../components/hashtag/DeletableBadge';
 import { hashtagValidation } from '../shared/sharedFn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postingsAPI } from '../shared/api';
-import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
 import { TypePostPosting } from '../typings';
 import useUserState from '../hooks/useUserState';
@@ -119,19 +118,18 @@ const Post = () => {
 	useEffect(() => {
 		if (postingId) {
 			const setPost = async () => {
-				const postInfo = await instance.get(`/api/board/detail/${postingId}`);
-				const data = postInfo.data;
-
-				if (data.nickname !== userState.nickname) {
+				console.log(postingsAPI.fetchPostDetail);
+				const postInfo = await postingsAPI.fetchPostDetail(postingId);
+				if (postInfo.nickname !== userState.nickname) {
 					alert('수정 권한이 없습니다.');
 					navigate(-1);
 					return;
 				}
 
 				setPostData({
-					title: data.title,
-					posting_content: data.posting_content,
-					hashtag: data.hashtag
+					title: postInfo.title,
+					posting_content: postInfo.posting_content,
+					hashtag: postInfo.hashtag
 				});
 			};
 			setPost();

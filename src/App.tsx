@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import Navigation from './components/nav/Navigation';
-import instance from './shared/axios';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { Helmet } from 'react-helmet';
 import * as Sentry from '@sentry/react';
 import Router from './components/router';
 import useUserDispatch from './hooks/useUserDispatch';
+import { AuthAPI } from './shared/api';
 
 function App() {
 	const userDispatch = useUserDispatch();
@@ -18,7 +18,7 @@ function App() {
 			if (!token) {
 				return;
 			} else if (token) {
-				const res = await instance.get('/api/user/info');
+				const res = await AuthAPI.fetchUserInfo();
 				const data = res.data;
 				userDispatch({ type: 'SET_INFO', info: data });
 			}

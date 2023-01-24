@@ -1,5 +1,15 @@
 import instance from './axios';
-import { TypePostPosting, TypePostEditing, TypeAddComment, TypeDeleteComment, TypeEditComment } from '../typings';
+import {
+	TypePostPosting,
+	TypePostEditing,
+	TypeAddComment,
+	TypeDeleteComment,
+	TypeEditComment,
+	TypeLogin,
+	TypeChangeUserInfo,
+	TypeChangePassword,
+	TypeSignup
+} from '../typings';
 
 export const postingsAPI = {
 	fetchPostingsListWithScroll: async (pageParams: number, category: string) => {
@@ -108,5 +118,29 @@ export const commentsAPI = {
 	},
 	DeleteCommentLike: async (id: string) => {
 		return await instance.delete(`/api/comment/${id}/likes`);
+	}
+};
+
+export const AuthAPI = {
+	fetchUserInfo: async () => {
+		return await instance.get('/api/user/info');
+	},
+	userLogin: async (data: TypeLogin) => {
+		return await instance.post('/api/login', data);
+	},
+	nicknameDupCheck: async (nickname: string) => {
+		return await instance.get(`/api/users/nickname/${nickname}`);
+	},
+	modifyUserInfo: async (data: TypeChangeUserInfo) => {
+		return await instance.put('/api/mypage/user/info', data);
+	},
+	modifyUserPassword: async (data: TypeChangePassword) => {
+		return await instance.put('/api/mypage/user/password', data);
+	},
+	emailDupCheck: async (username: string) => {
+		return await instance.get(`/api/users/email/${username}`);
+	},
+	userSignup: async (data: TypeSignup) => {
+		return await instance.post('/api/signup', data);
 	}
 };

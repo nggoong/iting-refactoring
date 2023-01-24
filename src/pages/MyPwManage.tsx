@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/header/Header';
-import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
-
 import { TypeChangePassword } from '../typings';
 import useUserState from '../hooks/useUserState';
+import { AuthAPI } from '../shared/api';
 
 const MyPwManage = () => {
 	const {
@@ -24,7 +23,7 @@ const MyPwManage = () => {
 
 	const myPwChangeHandler = async (data: TypeChangePassword) => {
 		try {
-			const res = await instance.put('/api/mypage/user/password', data);
+			const res = await AuthAPI.modifyUserPassword(data);
 			alert(res.data);
 			navigate('/mypage');
 		} catch (err: any) {

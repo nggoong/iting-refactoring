@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import instance from '../shared/axios';
 import kakao_login from '../assets/images/kakao_login.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldErrors } from 'react-hook-form';
 import { Helmet } from 'react-helmet';
 import useUserDispatch from '../hooks/useUserDispatch';
 import { TypeLogin } from '../typings';
+import { AuthAPI } from '../shared/api';
 
 const Login = () => {
 	const {
@@ -20,7 +20,7 @@ const Login = () => {
 
 	const onSubmitLogin = async (data: TypeLogin) => {
 		try {
-			const res = await instance.post('/api/login', data);
+			const res = await AuthAPI.userLogin(data);
 			const token = res.headers.authorization;
 			const refreshtoken = res.headers.refreshtoken;
 			const { username, nickname, user_type, kakao } = res.data;

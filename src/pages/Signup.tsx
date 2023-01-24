@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import instance from '../shared/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TypeSignup } from '../typings';
+import { AuthAPI } from '../shared/api';
 
 const Signup = () => {
 	const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Signup = () => {
 	const submitId = async () => {
 		const { username } = getValues();
 		try {
-			await instance.get(`/api/users/email/${username}`);
+			await AuthAPI.emailDupCheck(username);
 			alert('사용 가능한 ID 입니다!');
 			setIdDuple(true);
 		} catch (err: any) {
@@ -38,7 +38,7 @@ const Signup = () => {
 	const submitNickName = async () => {
 		const { nickname } = getValues();
 		try {
-			await instance.get(`/api/users/nickname/${nickname}`);
+			await AuthAPI.nicknameDupCheck(nickname);
 			alert('사용 가능한 닉네임 입니다!');
 			setNickNameDuple(true);
 		} catch (err: any) {
@@ -56,9 +56,7 @@ const Signup = () => {
 			return;
 		}
 		try {
-			await instance.post('/api/signup', data, {
-				headers: { 'Content-Type': `application/json` }
-			});
+			await AuthAPI.userSignup(data);
 			alert('회원가입이 완료되었습니다!');
 			return navigate('/login');
 		} catch (err) {
