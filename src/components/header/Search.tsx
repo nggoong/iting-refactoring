@@ -59,10 +59,6 @@ const Search = () => {
 
 	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (!userState.username) {
-			alert('로그인이 필요합니다.');
-			return navigate('/login');
-		}
 		if (!searchInput) return;
 
 		const inputResult = searchInput.replace(/[/!@#$%^&*~)(/?><,.\s]/g, '');

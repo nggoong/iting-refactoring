@@ -7,7 +7,6 @@ import { editPostingTime } from '../../shared/sharedFn';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 import { TypePosting } from '../../typings';
-import useUserState from '../../hooks/useUserState';
 
 interface Props {
 	post: TypePosting;
@@ -15,14 +14,8 @@ interface Props {
 
 const PostingCard = ({ post }: Props) => {
 	const [isLike] = useState(() => (post.like ? true : false));
-	const userState = useUserState();
 	const navigate = useNavigate();
 	const cardClickHandler = () => {
-		if (!userState.username) {
-			alert('로그인이 필요합니다.');
-
-			return navigate('/login');
-		}
 		navigate(`/detail/posting/${post.posting_id}`);
 	};
 

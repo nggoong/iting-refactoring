@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Splash from '../../pages/Splash';
 import ErrorFound from '../notice/NotFound';
@@ -44,11 +44,10 @@ const authRoutePath = [
 
 const Router = () => {
 	const token = sessionStorage.getItem('Authorization');
-	const location = useLocation();
 
 	return (
-		<AnimatePresence exitBeforeEnter>
-			<Routes key={location.pathname} location={location}>
+		<AnimatePresence>
+			<Routes>
 				<Route path={PRIVATE_ROUTE_PATH.SPLASH} element={<Splash />} />
 				{privateRoutePath.map((item) => (
 					<Route path={item.path} element={<PrivateRoute component={item.element} authenticated={token} />} key={item.id} />

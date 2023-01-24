@@ -2,27 +2,15 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useLocation } from 'react-router-dom';
 import IndexInfo from './NavIndexInfo';
-import useUserState from '../../hooks/useUserState';
 
 const Navigation = () => {
-	const userState = useUserState();
 	const navContentRef = useRef<HTMLDivElement | null>(null);
 	const navigate = useNavigate();
 	const location = useLocation();
 	const pathname = location.pathname;
 
 	const iconClickHandler = (e: React.MouseEvent<HTMLParagraphElement>) => {
-		const { url } = e.currentTarget.dataset;
-		if (!userState.username) {
-			if (url === '/mypage') navigate('/login');
-			else if (url === '/viewer/posting/list') return;
-			else {
-				alert('로그인이 필요합니다.');
-				navigate('/login');
-			}
-
-			return;
-		} else navigate(e.currentTarget.dataset.url!);
+		navigate(e.currentTarget.dataset.url!);
 	};
 
 	useEffect(() => {
