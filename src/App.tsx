@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import Navigation from './components/nav/Navigation';
 import GlobalStyle from './style/GlobalStyle';
@@ -12,7 +12,7 @@ import { AuthAPI } from './shared/api';
 function App() {
 	const userDispatch = useUserDispatch();
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		const getUserInfo = async () => {
 			const token = sessionStorage.getItem('Authorization');
 			if (!token) {

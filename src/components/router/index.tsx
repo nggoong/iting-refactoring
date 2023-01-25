@@ -45,16 +45,25 @@ const authRoutePath = [
 
 const Router = () => {
 	const { username } = useUserState();
+	const token = sessionStorage.getItem('Authorization');
 
 	return (
 		<AnimatePresence>
 			<Routes>
 				<Route path={PRIVATE_ROUTE_PATH.SPLASH} element={<Splash />} />
 				{privateRoutePath.map((item) => (
-					<Route path={item.path} element={<PrivateRoute component={item.element} authenticated={username} />} key={item.id} />
+					<Route
+						path={item.path}
+						element={<PrivateRoute component={item.element} authenticated={!!token || !!username} />}
+						key={item.id}
+					/>
 				))}
 				{authRoutePath.map((item) => (
-					<Route path={item.path} element={<UserLimitRoute component={item.element} authenticated={username} />} key={item.id} />
+					<Route
+						path={item.path}
+						element={<UserLimitRoute component={item.element} authenticated={!!token || !!username} />}
+						key={item.id}
+					/>
 				))}
 				<Route path="/oauth2/redirect/:token" element={<KakaoLogin />} />
 				<Route path="*" element={<ErrorFound title={'NOT FOUND'} text={'페이지를 찾지 못했어요!'} />} />

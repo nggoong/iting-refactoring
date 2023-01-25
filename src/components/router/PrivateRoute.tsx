@@ -4,7 +4,7 @@ import { AUTH_PATH } from './routePath';
 import { useLocation } from 'react-router-dom';
 
 interface Props {
-	authenticated: string | null;
+	authenticated: boolean;
 	component: ReactElement;
 }
 
