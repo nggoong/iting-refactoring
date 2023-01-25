@@ -6,6 +6,7 @@ import ErrorFound from '../notice/NotFound';
 import PrivateRoute from './PrivateRoute';
 import UserLimitRoute from './UserLimitRoute';
 import { PRIVATE_ROUTE_PATH, AUTH_PATH } from './routePath';
+import useUserState from '../../hooks/useUserState';
 
 const Detail = React.lazy(() => import('../../pages/Detail'));
 const Post = React.lazy(() => import('../../pages/Post'));
@@ -43,17 +44,17 @@ const authRoutePath = [
 ];
 
 const Router = () => {
-	const token = sessionStorage.getItem('Authorization');
+	const { username } = useUserState();
 
 	return (
 		<AnimatePresence>
 			<Routes>
 				<Route path={PRIVATE_ROUTE_PATH.SPLASH} element={<Splash />} />
 				{privateRoutePath.map((item) => (
-					<Route path={item.path} element={<PrivateRoute component={item.element} authenticated={token} />} key={item.id} />
+					<Route path={item.path} element={<PrivateRoute component={item.element} authenticated={username} />} key={item.id} />
 				))}
 				{authRoutePath.map((item) => (
-					<Route path={item.path} element={<UserLimitRoute component={item.element} authenticated={token} />} key={item.id} />
+					<Route path={item.path} element={<UserLimitRoute component={item.element} authenticated={username} />} key={item.id} />
 				))}
 				<Route path="/oauth2/redirect/:token" element={<KakaoLogin />} />
 				<Route path="*" element={<ErrorFound title={'NOT FOUND'} text={'페이지를 찾지 못했어요!'} />} />
