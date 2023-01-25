@@ -29,7 +29,7 @@ const ChatRoom = () => {
 
 	const sock = new SockJS(`${process.env.REACT_APP_API_URL}/iting`);
 	const client = StompJS.over(sock);
-	// client.debug();
+	client.debug = null;
 	const headers = {};
 
 	const { mutate: exitRoom } = useMutation(chatroomAPI.exitRoom, {
@@ -145,8 +145,6 @@ const ChatRoom = () => {
 
 	useEffect(() => {
 		scrollToBottom();
-		console.log(messages);
-
 		const msglen = messages.length;
 		/**  메세지가 추가될 때 마다 EXIT인지 확인 후 호스트 퇴장? >>게스트 퇴장 */
 		if (messages[msglen - 1]?.enter === 'EXIT') {
