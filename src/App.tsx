@@ -5,7 +5,7 @@ import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
 import { Helmet } from 'react-helmet';
 import * as Sentry from '@sentry/react';
-import Router from './components/router';
+import Router from '../src/router';
 import useUserDispatch from './hooks/useUserDispatch';
 import { AuthAPI } from './shared/api';
 
