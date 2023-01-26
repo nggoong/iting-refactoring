@@ -113,18 +113,18 @@ const Post = () => {
 	useEffect(() => {
 		if (postingId) {
 			const setPost = async () => {
-				console.log(postingsAPI.fetchPostDetail);
 				const postInfo = await postingsAPI.fetchPostDetail(postingId);
 				if (postInfo.nickname !== userState.nickname) {
 					alert('수정 권한이 없습니다.');
 					navigate(-1);
 					return;
 				}
+				const { title, posting_content, hashtag } = postInfo;
 
 				setPostData({
-					title: postInfo.title,
-					posting_content: postInfo.posting_content,
-					hashtag: postInfo.hashtag
+					title,
+					posting_content,
+					hashtag
 				});
 			};
 			setPost();
