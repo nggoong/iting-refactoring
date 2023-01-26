@@ -1,14 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
-import { userContext } from '../context/UserProvider';
 import Header from '../components/header/Header';
-import instance from '../shared/axios';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
-
 import { TypeChangePassword } from '../typings';
+import useUserState from '../hooks/useUserState';
+import { AuthAPI } from '../shared/api';
 
 const MyPwManage = () => {
 	const {
@@ -20,14 +18,12 @@ const MyPwManage = () => {
 		mode: 'onChange'
 	});
 	const navigate = useNavigate();
-
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
+	const userState = useUserState();
 	const [isAbleSubmit, setIsAbleSubmit] = useState(false);
 
 	const myPwChangeHandler = async (data: TypeChangePassword) => {
 		try {
-			const res = await instance.put('/api/mypage/user/password', data);
+			const res = await AuthAPI.modifyUserPassword(data);
 			alert(res.data);
 			navigate('/mypage');
 		} catch (err: any) {
@@ -42,7 +38,7 @@ const MyPwManage = () => {
 	};
 
 	useEffect(() => {
-		if (userInfo.kakao) {
+		if (userState.isKakao) {
 			alert('카카오회원은 비밀번호 변경을 할 수 없습니다.');
 			return navigate('/mypage');
 		}

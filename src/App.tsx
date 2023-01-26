@@ -1,39 +1,32 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import Navigation from './components/nav/Navigation';
-import instance from './shared/axios';
 import GlobalStyle from './style/GlobalStyle';
 import theme from './style/theme';
-import { userContext } from './context/UserProvider';
 import { Helmet } from 'react-helmet';
 import * as Sentry from '@sentry/react';
-import Router from './components/router';
+import Router from '../src/router';
+import useUserDispatch from './hooks/useUserDispatch';
+import { AuthAPI } from './shared/api';
 
 function App() {
-	const context = useContext(userContext);
-	const { setUserInfo } = context.actions;
+	const userDispatch = useUserDispatch();
 
 	useEffect(() => {
 		const getUserInfo = async () => {
 			const token = sessionStorage.getItem('Authorization');
-			/* 토큰이 웹 스토리지에 없는 경우(로그인 X) */
 			if (!token) {
-				// 혹시나 context에 저장되어 있을 경우를 방지 default 값으로 초기화
 				return;
 			} else if (token) {
-				/*토큰이 웹 스토리지에 있는 경우(로그인 O) */
-				const res = await instance.get('/api/user/info');
+				const res = await AuthAPI.fetchUserInfo();
 				const data = res.data;
-				// user 정보 저장
-				setUserInfo({ ...data });
+				userDispatch({ type: 'SET_INFO', info: data });
 			}
 		};
-
 		getUserInfo().catch(console.error);
 	}, []);
 
 	return (
-		// TODO: 로그인 유무에 따라 url 직접 접근 차단 또는 허용하는 기능 구현(react-router로)
 		<ThemeProvider theme={theme}>
 			<div className="App">
 				<GlobalStyle />

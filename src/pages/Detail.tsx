@@ -1,24 +1,23 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
-import instance from '../shared/axios';
 import NomalBadge from '../components/hashtag/NomalBadge';
-import { userContext } from '../context/UserProvider';
 import { userTypeTrans } from '../shared/sharedFn';
 import CommentCard from '../components/card/CommentCard';
 import SubmitForm from '../components/submitForm/SubmitForm';
 import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { editPostingTime } from '../shared/sharedFn';
-
+import { postingsAPI } from '../shared/api';
+import useUserState from '../hooks/useUserState';
 import { TypeComment } from '../typings';
 
 interface ContentLikeBtnProps {
-	isLike?: boolean;
-	onClick?: any;
+	isLike: boolean;
+	onClick: any;
 }
 
 const Detail = () => {
@@ -26,25 +25,18 @@ const Detail = () => {
 	const postingId = Number(params.postingId);
 	const queryClient = useQueryClient();
 	const [commentEditStateForSubmit, setCommentEditStateForSubmit] = useState(false);
+	const userState = useUserState();
+	const loginNickname = userState.nickname;
 
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
-	const loginNickname = userInfo.nickname;
-
-	const getPost = async () => {
-		const res = await instance.get(`/api/board/detail/${postingId}`);
-		return res.data;
-	};
-
-	const { data } = useQuery(['post', postingId], getPost, {
+	const { data } = useQuery(['post', postingId], () => postingsAPI.fetchPostDetail(postingId), {
 		refetchOnWindowFocus: false
 	});
 
-	const contentLike = async () => {
-		if (data.like === true) {
-			return await instance.delete(`/api/board/${postingId}/likes`);
+	const contentLike = (postingId: number) => {
+		if (data.like) {
+			return postingsAPI.postingLikeDelete(postingId);
 		} else {
-			return await instance.post(`/api/board/${postingId}/likes`);
+			return postingsAPI.postingLike(postingId);
 		}
 	};
 
@@ -94,7 +86,7 @@ const Detail = () => {
 						<IoChatboxEllipsesOutline />
 						{data.comments.length}
 					</CommentCount>
-					<ContentLikeBtn onClick={contentlikeHandler} isLike={data.like}>
+					<ContentLikeBtn onClick={() => contentlikeHandler(postingId)} isLike={data.like}>
 						<AiOutlineLike />
 						{data.like_count}
 					</ContentLikeBtn>

@@ -83,7 +83,7 @@ export interface TypeChangePassword {
 	confirmChangePassword: string;
 }
 
-export interface TypeChangeNickname {
+export interface TypeChangeUserInfo {
 	nickname: string;
 	user_type: string;
 }
@@ -98,4 +98,22 @@ export interface TypeChatRoomNavigateState {
 export interface TypeCompletedSearch {
 	hashtag: string;
 	count: number;
+}
+
+export interface TypeAddComment {
+	postingId: number;
+	data: {
+		content: string;
+	};
+}
+
+export interface TypeDeleteComment {
+	postingId: number;
+	commentId: string;
+}
+
+export interface TypeEditComment extends TypeDeleteComment {
+	data: {
+		content: string;
+	};
 }

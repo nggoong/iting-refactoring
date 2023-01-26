@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import NomalBadge from '../hashtag/NomalBadge';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { userTypeTrans } from '../../shared/sharedFn';
 import { editPostingTime } from '../../shared/sharedFn';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
-import { userContext } from '../../context/UserProvider';
 import { TypePosting } from '../../typings';
 
 interface Props {
@@ -14,16 +13,9 @@ interface Props {
 }
 
 const PostingCard = ({ post }: Props) => {
-	const context = useContext(userContext);
 	const [isLike] = useState(() => (post.like ? true : false));
-	const { username } = context.state.userInfo;
 	const navigate = useNavigate();
 	const cardClickHandler = () => {
-		if (!username) {
-			alert('로그인이 필요합니다.');
-
-			return navigate('/login');
-		}
 		navigate(`/detail/posting/${post.posting_id}`);
 	};
 

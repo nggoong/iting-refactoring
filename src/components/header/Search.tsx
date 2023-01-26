@@ -1,14 +1,14 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { userContext } from '../../context/UserProvider';
 import AutoCompleteCard from '../card/AutoCompleteCard';
 import { chatroomAPI, postingsAPI } from '../../shared/api';
 import { AxiosResponse } from 'axios';
 import { TypeCompletedSearch } from '../../typings';
+import useUserState from '../../hooks/useUserState';
 
 interface AutoCompleteProps {
-	isShow?: string;
+	isShow: string;
 }
 
 const Search = () => {
@@ -16,10 +16,9 @@ const Search = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const pathname = location.pathname;
-	const context = useContext(userContext);
-	const { username } = context.state.userInfo;
 	const [searchInput, setSearchInput] = useState('');
 	const timerRef = useRef<ReturnType<typeof setTimeout>>();
+	const userState = useUserState();
 
 	const debounceCompletedSearch = (callback: (hashtag: string) => Promise<AxiosResponse<any, any>>, value: string) => {
 		if (timerRef.current) {
@@ -47,7 +46,7 @@ const Search = () => {
 			setCompletedList([]);
 			return;
 		} else {
-			if (!username) return;
+			if (!userState.username) return;
 			else {
 				if (pathname.includes('/viewer/posting')) {
 					debounceCompletedSearch(postingsAPI.fetchAutoCompletePostingList, e.target.value);
@@ -60,10 +59,6 @@ const Search = () => {
 
 	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (!username) {
-			alert('로그인이 필요합니다.');
-			return navigate('/login');
-		}
 		if (!searchInput) return;
 
 		const inputResult = searchInput.replace(/[/!@#$%^&*~)(/?><,.\s]/g, '');
@@ -92,7 +87,7 @@ const Search = () => {
 			<div className="search-wrapper">
 				<AutoComplete isShow={searchInput ? 'show' : 'notshow'}>
 					{completedList?.length === 0 && searchInput && (
-						<NoData>{!username ? '로그인 후 이용해주세요' : '검색결과가 없습니다.'}</NoData>
+						<NoData>{!userState.username ? '로그인 후 이용해주세요' : '검색결과가 없습니다.'}</NoData>
 					)}
 					{(!searchInput && searchInput.length < 2) ||
 						completedList?.map((value, index) => {

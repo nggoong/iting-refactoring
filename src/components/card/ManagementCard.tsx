@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface ManagementWrapperProps {
-	isShow?: boolean;
+	isShow: boolean;
 }
 
 interface Props {

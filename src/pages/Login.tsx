@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import instance from '../shared/axios';
 import kakao_login from '../assets/images/kakao_login.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldErrors } from 'react-hook-form';
-import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
-
+import useUserDispatch from '../hooks/useUserDispatch';
 import { TypeLogin } from '../typings';
+import { AuthAPI } from '../shared/api';
 
 const Login = () => {
 	const {
@@ -17,18 +16,16 @@ const Login = () => {
 	} = useForm<TypeLogin>();
 
 	const navigate = useNavigate();
-
-	const context = useContext(userContext);
-	const { setUserInfo } = context.actions;
+	const userDispatch = useUserDispatch();
 
 	const onSubmitLogin = async (data: TypeLogin) => {
 		try {
-			const res = await instance.post('/api/login', data);
+			const res = await AuthAPI.userLogin(data);
 			const token = res.headers.authorization;
 			const refreshtoken = res.headers.refreshtoken;
 			const { username, nickname, user_type, kakao } = res.data;
-			const userData = { username, nickname, user_type, kakao };
-			setUserInfo(userData);
+			const userData = { username, nickname, user_type, isKakao: kakao };
+			userDispatch({ type: 'SET_INFO', info: userData });
 			sessionStorage.setItem('Authorization', token);
 			sessionStorage.setItem('Refresh__Token', refreshtoken);
 			alert('환영합니다!');

@@ -1,12 +1,11 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { userTypeTrans } from '../../shared/sharedFn';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { editPostingTime } from '../../shared/sharedFn';
-
-import instance from '../../shared/axios';
-import { userContext } from '../../context/UserProvider';
+import { commentsAPI } from '../../shared/api';
+import useUserState from '../../hooks/useUserState';
 
 interface Props {
 	data: any;
@@ -32,52 +31,49 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 	const queryClient = useQueryClient();
 
 	const [commentEditState, setCommentEditState] = useState(false);
+	const userState = useUserState();
+	const loginNickname = userState.nickname;
 
-	// 로그인한 유저의 닉네임 가져오기
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
-	const loginNickname = userInfo.nickname;
-
-	// 댓글 기능관련
-	const editComment = async (commentId: string) => {
-		const comment = { content: commentEditInput.current?.value };
-		await instance.put(`/api/board/${postingId}/comment/${commentId}`, comment);
-	};
-
-	const { mutate: commentEditHandler } = useMutation(editComment, {
+	const { mutate: commentEditHandler } = useMutation(commentsAPI.editComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
+		},
+		onError: (err: any) => {
+			alert(err.response.data);
 		}
 	});
 
-	const deleteComment = async (commentId: string) => {
-		const result = window.confirm('댓글을 삭제하시겠습니까?');
-		if (result) {
-			await instance.delete(`/api/board/${postingId}/comment/${commentId}`);
-		}
-	};
-
-	const { mutate: commentDelHandler } = useMutation(deleteComment, {
+	const { mutate: commentDelHandler } = useMutation(commentsAPI.deleteComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
+		},
+		onError: (err: any) => {
+			alert(err.response.data);
 		}
 	});
 
 	const commentLike = async (id: string) => {
-		if (data.like === true) {
-			return await instance.delete(`/api/comment/${id}/likes`);
+		if (data.like) {
+			return commentsAPI.DeleteCommentLike(id);
 		} else {
-			return await instance.post(`/api/comment/${id}/likes`);
+			return commentsAPI.commentLike(id);
 		}
 	};
 
 	const { mutate: commentlikeHandler } = useMutation(commentLike, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
+		},
+		onError(err: any) {
+			alert(err.response.data);
 		}
 	});
 
-	// 시간세팅
+	const deleteBtnClickHandler = () => {
+		const result = window.confirm('댓글을 삭제하시겠습니까?');
+		if (result) commentDelHandler({ postingId, commentId: `${data.id}` });
+		else return;
+	};
 
 	return (
 		<>
@@ -100,7 +96,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 						</CommentEditCancelBtn>
 						<CommentEditSaveBtn
 							onClick={() => {
-								commentEditHandler(`${data.id}`);
+								commentEditHandler({ postingId, commentId: `${data.id}`, data: { content: commentEditInput.current!.value } });
 								setCommentEditState(false);
 								setCommentEditStateForSubmit(false);
 							}}
@@ -134,13 +130,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 								>
 									수정
 								</CommentEdit>
-								<CommentDel
-									onClick={() => {
-										commentDelHandler(`${data.id}`);
-									}}
-								>
-									삭제
-								</CommentDel>
+								<CommentDel onClick={deleteBtnClickHandler}>삭제</CommentDel>
 							</CommentEditAndDelBox>
 						</>
 					) : (

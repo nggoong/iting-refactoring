@@ -1,26 +1,24 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import instance from '../shared/axios';
-
 import Header from '../components/header/Header';
-import { userContext } from '../context/UserProvider';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
-
-import { TypeChangeNickname } from '../typings';
+import { TypeChangeUserInfo } from '../typings';
+import useUserDispatch from '../hooks/useUserDispatch';
+import useUserState from '../hooks/useUserState';
+import { AuthAPI } from '../shared/api';
 
 const MyInfoManage = () => {
 	const navigate = useNavigate();
-	const context = useContext(userContext);
-	const { userInfo } = context.state;
-	const { setUserInfo } = context.actions;
+	const userDispatch = useUserDispatch();
+	const userState = useUserState();
 	const {
 		register,
 		handleSubmit,
 		getValues,
 		formState: { isSubmitting, errors }
-	} = useForm<TypeChangeNickname>({ mode: 'onChange' });
+	} = useForm<TypeChangeUserInfo>({ mode: 'onChange' });
 
 	const [nicknameCheck, setNicknameCheck] = useState(false);
 	const [userTypeState, setUserTypeState] = useState(false);
@@ -30,7 +28,7 @@ const MyInfoManage = () => {
 	const nicknameCheckHandler = async () => {
 		const { nickname } = getValues();
 		try {
-			await instance.get(`/api/users/nickname/${nickname}`);
+			await AuthAPI.nicknameDupCheck(nickname);
 			setNicknameCheck(true);
 			alert('사용 가능한 닉네임입니다.');
 		} catch (err: any) {
@@ -39,17 +37,15 @@ const MyInfoManage = () => {
 		}
 	};
 
-	const myInfoChangeHandler = async (data: TypeChangeNickname) => {
+	const myInfoChangeHandler = async (data: TypeChangeUserInfo) => {
 		if (!nicknameCheck && dupCheckBtnState) {
 			alert('닉네임 중복 확인을 해주세요.');
 			return;
 		}
 		try {
-			const res = await instance.put('/api/mypage/user/info', data, {
-				headers: { 'Content-Type': `application/json` }
-			});
-			const userData = { ...userInfo, ...data };
-			setUserInfo(userData);
+			const res = await AuthAPI.modifyUserInfo(data);
+			const userData = { ...userState, ...data };
+			userDispatch({ type: 'SET_INFO', info: userData });
 			alert(res.data);
 			navigate('/mypage');
 		} catch (err: any) {
@@ -76,7 +72,7 @@ const MyInfoManage = () => {
 					<p>닉네임</p>
 					<NicknameInputBox>
 						<input
-							defaultValue={userInfo.nickname}
+							defaultValue={userState.nickname}
 							{...register('nickname', {
 								required: '닉네임은 필수 입력 사항입니다.',
 								pattern: {
@@ -93,7 +89,7 @@ const MyInfoManage = () => {
 								},
 								onChange: (e) => {
 									nicknameCheck && setNicknameCheck(false);
-									e.target.value === userInfo.nickname ? setDupCheckBtnState(false) : setDupCheckBtnState(true);
+									e.target.value === userState.nickname ? setDupCheckBtnState(false) : setDupCheckBtnState(true);
 								}
 							})}
 						></input>
@@ -109,10 +105,10 @@ const MyInfoManage = () => {
 				</NicknameBox>
 				<UserTypeBox>
 					<select
-						defaultValue={userInfo.user_type}
+						defaultValue={userState.user_type}
 						{...register('user_type', {
 							onChange: (e) => {
-								e.target.value === userInfo.user_type ? setUserTypeState(false) : setUserTypeState(true);
+								e.target.value === userState.user_type ? setUserTypeState(false) : setUserTypeState(true);
 							}
 						})}
 					>

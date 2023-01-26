@@ -14,7 +14,7 @@ import { Helmet } from 'react-helmet';
 import { TypePosting } from '../typings';
 
 interface PostingViewerWrapperProps {
-	paramCategory?: string;
+	paramCategory: string;
 }
 
 const PostingViewer = () => {
@@ -66,7 +66,7 @@ const PostingViewer = () => {
 	}
 
 	return (
-		<PostingViewerWrapper paramCategory={paramCategory}>
+		<PostingViewerWrapper paramCategory={paramCategory!}>
 			<Helmet>
 				<title>IT-ing</title>
 				<link rel="apple-touch-icon" sizes="180x180" href="180.ico" />

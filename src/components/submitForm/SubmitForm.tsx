@@ -1,13 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import styled, { css } from 'styled-components';
-import instance from '../../shared/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { BiRightArrowCircle } from 'react-icons/bi';
+import { commentsAPI } from '../../shared/api';
 
 interface CommentAddBoxProps {
 	isShow?: boolean;
-	onSubmit?: any;
+	onSubmit: any;
 }
 
 interface Props {
@@ -22,12 +22,7 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 	const queryClient = useQueryClient();
 	const location = useLocation();
 
-	const addComment = async () => {
-		const comment = { content: commentInput.current!.value };
-		return await instance.post(`/api/board/${postingId}/comment`, comment);
-	};
-
-	const { mutate: commentAddHandler } = useMutation(addComment, {
+	const { mutate: commentAddHandler } = useMutation(commentsAPI.addComment, {
 		onSuccess: () => {
 			queryClient.invalidateQueries(['post']);
 			commentInput.current!.value = '';
@@ -41,7 +36,7 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 		if (location.pathname.includes('/detail/room/chat')) {
 			sendMsg!(commentInput.current!.value);
 			commentInput.current!.value = '';
-		} else commentAddHandler();
+		} else commentAddHandler({ postingId: postingId!, data: { content: commentInput.current!.value } });
 	};
 
 	return (
@@ -58,7 +53,7 @@ const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSu
 	);
 };
 
-export default React.memo(SubmitForm);
+export default memo(SubmitForm);
 
 const CommentAddBox = styled.form<CommentAddBoxProps>`
 	background: #efefef;

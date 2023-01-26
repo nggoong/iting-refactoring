@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Navigate } from 'react-router-dom';
 
 interface Props {
-	authenticated: string | null;
+	authenticated: boolean;
 	component: ReactElement;
 }
 

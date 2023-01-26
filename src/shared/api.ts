@@ -1,5 +1,15 @@
 import instance from './axios';
-import { TypePostPosting, TypePostEditing } from '../typings';
+import {
+	TypePostPosting,
+	TypePostEditing,
+	TypeAddComment,
+	TypeDeleteComment,
+	TypeEditComment,
+	TypeLogin,
+	TypeChangeUserInfo,
+	TypeChangePassword,
+	TypeSignup
+} from '../typings';
 
 export const postingsAPI = {
 	fetchPostingsListWithScroll: async (pageParams: number, category: string) => {
@@ -15,33 +25,49 @@ export const postingsAPI = {
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
 	},
+
 	postPosting: async (newData: TypePostPosting) => {
 		const res = await instance.post('/api/board', newData);
 		return res.data;
 	},
 
 	postEditing: async ({ postingId, newData }: TypePostEditing) => {
-		console.log(postingId);
-		console.log(newData);
 		await instance.put(`/api/board/${postingId}`, newData);
 	},
+
 	postDelete: async (postingId: number) => {
 		await instance.delete(`/api/board/${postingId}`);
 	},
+
 	fetchSearchPostingsListWithScroll: async (pageParams: number, hashtag: string) => {
 		const res = await instance.get(`/api/search/postings?hashtag=${hashtag}&page=${pageParams}&size=10`);
 		const { content } = res.data;
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
 	},
+
 	fetchAutoCompletePostingList: async (hashtag: string) => {
 		return await instance.get(`/api/hashtags/posts?hashtag=${hashtag}`);
 	},
+
 	fetchCommentInPostListWithScroll: async (pageParams: number) => {
 		const res = await instance.get(`/api/mypage/comments/postings?page=${pageParams}&size=10`);
 		const { content } = res.data;
 		const { last } = res.data;
 		return { posts: content, nextPage: pageParams + 1, isLast: last };
+	},
+
+	fetchPostDetail: async (postingId: number) => {
+		const res = await instance.get(`/api/board/detail/${postingId}`);
+		return res.data;
+	},
+
+	postingLike: async (postingId: number) => {
+		return await instance.post(`/api/board/${postingId}/likes`);
+	},
+
+	postingLikeDelete: async (postingId: number) => {
+		return await instance.delete(`/api/board/${postingId}/likes`);
 	}
 };
 
@@ -74,5 +100,47 @@ export const chatroomAPI = {
 	},
 	fetchAutoCompleteRoomList: async (hashtag: string) => {
 		return await instance.get(`/api/hashtags/rooms?hashtag=${hashtag}`);
+	}
+};
+
+export const commentsAPI = {
+	addComment: async (data: TypeAddComment) => {
+		return await instance.post(`/api/board/${data.postingId}/comment`, data.data);
+	},
+	deleteComment: async (data: TypeDeleteComment) => {
+		return await instance.delete(`/api/board/${data.postingId}/comment/${data.commentId}`);
+	},
+	editComment: async (data: TypeEditComment) => {
+		return await instance.put(`/api/board/${data.postingId}/comment/${data.commentId}`, data.data);
+	},
+	commentLike: async (id: string) => {
+		return await instance.post(`/api/comment/${id}/likes`);
+	},
+	DeleteCommentLike: async (id: string) => {
+		return await instance.delete(`/api/comment/${id}/likes`);
+	}
+};
+
+export const AuthAPI = {
+	fetchUserInfo: async () => {
+		return await instance.get('/api/user/info');
+	},
+	userLogin: async (data: TypeLogin) => {
+		return await instance.post('/api/login', data);
+	},
+	nicknameDupCheck: async (nickname: string) => {
+		return await instance.get(`/api/users/nickname/${nickname}`);
+	},
+	modifyUserInfo: async (data: TypeChangeUserInfo) => {
+		return await instance.put('/api/mypage/user/info', data);
+	},
+	modifyUserPassword: async (data: TypeChangePassword) => {
+		return await instance.put('/api/mypage/user/password', data);
+	},
+	emailDupCheck: async (username: string) => {
+		return await instance.get(`/api/users/email/${username}`);
+	},
+	userSignup: async (data: TypeSignup) => {
+		return await instance.post('/api/signup', data);
 	}
 };
