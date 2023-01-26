@@ -21,7 +21,7 @@ export const userContextState = createContext<UserState | undefined>(undefined);
 
 export const userContextDispatch = createContext<TypeUserDispatch | undefined>(undefined);
 
-const userReudcer = (state: UserState = defaultUserInfo, action: Action) => {
+const userReducer = (state: UserState = defaultUserInfo, action: Action) => {
 	switch (action.type) {
 		case 'SET_DEFAULT': {
 			return defaultUserInfo;
@@ -36,7 +36,7 @@ const userReudcer = (state: UserState = defaultUserInfo, action: Action) => {
 };
 
 const UserProvider = ({ children }: PropsWithChildren) => {
-	const [userInfo, dispatch] = useReducer(userReudcer, defaultUserInfo);
+	const [userInfo, dispatch] = useReducer(userReducer, defaultUserInfo);
 
 	return (
 		<userContextDispatch.Provider value={dispatch}>
