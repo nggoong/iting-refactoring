@@ -19,8 +19,10 @@
 
 ## 📌 마주한 문제와 해결 과정
 
-👉 **문제 1**: #5
-✔ **문제 1 해결**: #6 추가적인 태스크 참고
+👉 **문제 1**: [try-catch에서 에러가 발생해도 catch로 빠지지 않는 현상](https://github.com/nggoong/iting-refactoring/issues/5)
 
-👉 **문제 2** : #8
-✔ **문제 2 해결**: #9 추가적인 태스크 참고
+- **문제 1 해결**: [PR 추가적인 태스크 참고](https://github.com/nggoong/iting-refactoring/pull/6)
+
+👉 **문제 2** : [Detail.tsx에서 api.ts의 객체, 함수를 인식하지 못하는 현상](https://github.com/nggoong/iting-refactoring/issues/8)
+
+- **문제 2 해결**: [PR 추가적인 태스크 참고](https://github.com/nggoong/iting-refactoring/pull/9)
