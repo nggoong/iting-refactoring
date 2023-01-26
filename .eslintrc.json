@@ -18,6 +18,7 @@
 		"sourceType": "module"
 	},
 	"plugins": ["react", "jest", "import", "typescript"],
+	"ignorePatterns": ["/build"],
 	"rules": {
 		"react/react-in-jsx-scope": "off",
 		"no-var": "error",
