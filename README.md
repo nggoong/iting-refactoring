@@ -43,3 +43,5 @@
 👉 **문제 2** : [Detail.tsx에서 api.ts의 객체, 함수를 인식하지 못하는 현상](https://github.com/nggoong/iting-refactoring/issues/8)
 
 - **문제 2 해결**: [PR 추가적인 태스크 참고](https://github.com/nggoong/iting-refactoring/pull/9)
+
+👉 **[회고 및 다른 문제 보러가기(Blog)](https://velog.io/@apro_xo/%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EB%A5%BC-%EC%A7%84%ED%96%89%ED%95%98%EB%A9%B0)**
