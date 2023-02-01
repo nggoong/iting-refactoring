@@ -78,6 +78,7 @@ const Signup = () => {
 				<IdBox>
 					<input
 						placeholder="이메일 형식"
+						autoComplete="off"
 						{...register('username', {
 							required: '이메일 입력은 필수입니다.',
 							pattern: {
@@ -87,9 +88,9 @@ const Signup = () => {
 						})}
 					/>
 					<button
-						className={!errors.username ? 'btnstart' : 'btnfalse'}
+						className={errors.username || !getValues().username ? 'btnfalse' : 'btnstart'}
 						type="button"
-						disabled={errors.username ? true : false}
+						disabled={errors.username || !getValues().username ? true : false}
 						onClick={submitId}
 					>
 						{' '}
@@ -140,6 +141,7 @@ const Signup = () => {
 				<NicknameBox>
 					<input
 						placeholder="한글/영문/숫자, 2-10자리 이하"
+						autoComplete="off"
 						{...register('nickname', {
 							required: '닉네임을 입력해주세요.',
 							pattern: {
@@ -157,9 +159,9 @@ const Signup = () => {
 						})}
 					/>
 					<button
-						className={!errors.nickname ? 'btnstart' : !errors.nickname ? '' : 'btnfalse'}
+						className={errors.nickname || !getValues().nickname ? 'btnfalse' : 'btnstart'}
 						type="button"
-						disabled={errors.nickname ? true : false}
+						disabled={errors.nickname || !getValues().nickname ? true : false}
 						onClick={submitNickName}
 					>
 						{' '}
@@ -181,7 +183,7 @@ const Signup = () => {
 				</UsertypeBox>
 
 				<SignupBottom>
-					<button className={idduple && nicknameduple ? 'btnstart' : 'btnfalse'} type="submit" disabled={isSubmitting}>
+					<button type="submit" disabled={isSubmitting}>
 						가입하기
 					</button>
 					<Link to="/login">
@@ -203,16 +205,12 @@ const SignupWrapper = styled.div`
 
 	padding-top: 80px;
 
-	button {
+	.btnstart {
+		background-color: ${({ theme }) => theme.colors.mainBlue};
 		cursor: pointer;
 	}
 
-	.btnstart {
-		cursor: not-allowed;
-	}
-
 	.btnfalse {
-		background: #3549ff9e;
 		cursor: not-allowed;
 	}
 `;
@@ -241,10 +239,9 @@ const SingupContent = styled.form`
 	button {
 		width: 128px;
 		height: 46px;
-		background: #3549ff;
 		border-radius: 8px;
 		border: none;
-
+		background-color: ${({ theme }) => theme.colors.mainBlue};
 		font-family: 'Apple SD Gothic Neo';
 		font-style: normal;
 		font-weight: 600;
@@ -328,7 +325,7 @@ const SignupBottom = styled.div`
 		left: 20px;
 		top: 654px;
 
-		background: #3549ff;
+		background-color: ${({ theme }) => theme.colors.mainBlue};
 		border-radius: 40px;
 	}
 
