@@ -50,6 +50,9 @@ instance.interceptors.response.use(
 				sessionStorage.removeItem('Authorization');
 				window.location.href = '/login';
 			}
+		} else if (err.response && err.response.status === 404) {
+			alert('연결이 원활하지 않습니다. 잠시 후 다시 실행해주세요!');
+			return;
 		}
 		return Promise.reject(err);
 	}
