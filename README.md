@@ -13,7 +13,7 @@
   - 유지보수 편리성 향상
 - **context API에서 useState 대신 useReducer를 사용하는 방식으로 변경, 커스텀 훅 정의 및 적용✔**
   - useState를 사용하는 것 보다 useReducer를 사용하는게 여러 상황에 유연하게 대처할 수 있고, Action type을 통해 코드의 목적이 명확해진다고 판단
-  - state와 dispatch의 context를 다르게 구성하여 컴포넌트에서 사용 시 사용 목적을 좀 더 명확히 하여 가독성 향상
+  - state와 dispatch의 context를 다르게 구성하여 컴포넌트에서 사용 시 사용 목적을 좀 더 명확히 하고, 불필요한 리렌더링 방지
   - context의 타입은 undefined가 포함된 유니온 타입이기 때문에 타입 검사 필수
   - 따라서 커스텀 훅에 타입 검사 로직을 포함하였으며 그 결과 컴포넌트 내 context 사용의 편리성 향상
 - **ESlint와 Prettier 규칙을 설정하고, husky로 ESlint와 Prettier를 git hook(pre-commit)에 등록✔**
