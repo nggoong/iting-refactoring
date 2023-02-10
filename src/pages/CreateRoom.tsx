@@ -4,26 +4,17 @@ import Header from '../components/header/Header';
 import DeletableBadge from '../components/hashtag/DeletableBadge';
 import ErrorFound from '../components/notice/NotFound';
 import { WhiteBackground } from '../style/sharedStyle';
-import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-
-import { chatroomAPI } from '../shared/api';
 import { hashtagValidation } from '../shared/sharedFn';
 import { Helmet } from 'react-helmet';
+import useCreateRoomMutation from '../hooks/queries/useCreateRoomMutation';
 
 const CreateRoom = () => {
-	const navigate = useNavigate();
 	const [inputs, setInputs] = useState({
 		titleInput: '',
 		hashtagInput: ''
 	});
 	const [hashtag, setHashtag] = useState<string[]>([]);
-
-	const { mutate: createRoom, isError: createRoomError } = useMutation(chatroomAPI.createChatRoom, {
-		onSuccess: (data) => {
-			navigate(`/detail/room/chat/${data}`, { state: { title: inputs.titleInput, isHost: true } });
-		}
-	});
+	const { mutate: createRoom, isError: createRoomError } = useCreateRoomMutation({ titleInput: inputs.titleInput });
 
 	const InputsChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setInputs({ ...inputs, [e.target.name]: e.target.value });
