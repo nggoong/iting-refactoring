@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-// import { useInfiniteQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-// import { postingsAPI } from '../shared/api';
 import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 import PostingCard from '../components/card/PostingCard';
@@ -9,7 +7,6 @@ import Header from '../components/header/Header';
 import Notice from '../components/notice/Notice';
 import Loading from '../components/loading/Loading';
 import ErrorFound from '../components/notice/NotFound';
-
 import { Helmet } from 'react-helmet';
 import { TypePosting } from '../typings';
 import useScrollPostQuery from '../hooks/queries/useScrollPostQuery';
