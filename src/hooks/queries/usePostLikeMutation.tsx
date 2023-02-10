@@ -6,13 +6,13 @@ interface Props {
 	postingId: number;
 }
 
-const usePostLikeHandler = ({ mutateFunction, postingId }: Props) => {
+const usePostLikeMutation = ({ mutateFunction, postingId }: Props) => {
 	const queryClient = useQueryClient();
 	return useMutation(() => mutateFunction(postingId), {
-		onSuccess: () => {
-			queryClient.invalidateQueries(['post']);
+		onSuccess: async () => {
+			return await queryClient.invalidateQueries(['post']);
 		}
 	});
 };
 
-export default usePostLikeHandler;
+export default usePostLikeMutation;

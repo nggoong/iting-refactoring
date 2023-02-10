@@ -25,7 +25,7 @@ const PostingViewer = () => {
 		fetchNextPage: fetchListNextPage,
 		isFetchingNextPage: isListFetching,
 		isError: listFetchError
-	} = useScrollPostQuery({ storecode: paramCategory!, paramCategory: paramCategory!, paramHashtag });
+	} = useScrollPostQuery({ storecode: paramCategory!, paramCategory: paramCategory!, paramHashtag: paramHashtag! });
 
 	const {
 		data: searchListData,

@@ -14,7 +14,7 @@ import { postingsAPI } from '../shared/api';
 import useUserState from '../hooks/useUserState';
 import { TypeComment } from '../typings';
 import usePostDetailQuery from '../hooks/queries/usePostDetailQuery';
-import usePostLikeHandler from '../hooks/queries/usePostLikeHandler';
+import usePostLikeHandler from '../hooks/queries/usePostLikeMutation';
 
 interface ContentLikeBtnProps {
 	isLike: boolean;

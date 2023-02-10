@@ -1,8 +1,8 @@
-import { QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { postingsAPI } from '../../shared/api';
 
 interface Props {
-	storecode: QueryKey;
+	storecode: string;
 	paramCategory: string;
 	paramHashtag: string;
 }

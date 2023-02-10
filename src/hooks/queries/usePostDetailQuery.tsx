@@ -1,8 +1,8 @@
-import { QueryKey, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { postingsAPI } from '../../shared/api';
 
 interface Props {
-	storecode: QueryKey;
+	storecode: string;
 	postingId: number;
 }
 
