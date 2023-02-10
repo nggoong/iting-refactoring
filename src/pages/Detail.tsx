@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 import NomalBadge from '../components/hashtag/NomalBadge';
@@ -14,6 +14,7 @@ import { editPostingTime } from '../shared/sharedFn';
 import { postingsAPI } from '../shared/api';
 import useUserState from '../hooks/useUserState';
 import { TypeComment } from '../typings';
+import usePostDetailQuery from '../hooks/queries/usePostDetailQuery';
 
 interface ContentLikeBtnProps {
 	isLike: boolean;
@@ -28,9 +29,7 @@ const Detail = () => {
 	const userState = useUserState();
 	const loginNickname = userState.nickname;
 
-	const { data } = useQuery(['post', postingId], () => postingsAPI.fetchPostDetail(postingId), {
-		refetchOnWindowFocus: false
-	});
+	const { data } = usePostDetailQuery({ storecode: postingId.toString(), postingId });
 
 	const contentLike = (postingId: number) => {
 		if (data.like) {
