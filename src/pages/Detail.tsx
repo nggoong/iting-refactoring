@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { IoChatboxEllipsesOutline } from 'react-icons/io5';
 import NomalBadge from '../components/hashtag/NomalBadge';
@@ -15,6 +14,7 @@ import { postingsAPI } from '../shared/api';
 import useUserState from '../hooks/useUserState';
 import { TypeComment } from '../typings';
 import usePostDetailQuery from '../hooks/queries/usePostDetailQuery';
+import usePostLikeHandler from '../hooks/queries/usePostLikeHandler';
 
 interface ContentLikeBtnProps {
 	isLike: boolean;
@@ -24,14 +24,13 @@ interface ContentLikeBtnProps {
 const Detail = () => {
 	const params = useParams();
 	const postingId = Number(params.postingId);
-	const queryClient = useQueryClient();
 	const [commentEditStateForSubmit, setCommentEditStateForSubmit] = useState(false);
 	const userState = useUserState();
 	const loginNickname = userState.nickname;
 
 	const { data } = usePostDetailQuery({ storecode: postingId.toString(), postingId });
 
-	const contentLike = (postingId: number) => {
+	const postLike = (postingId: number) => {
 		if (data.like) {
 			return postingsAPI.postingLikeDelete(postingId);
 		} else {
@@ -39,11 +38,7 @@ const Detail = () => {
 		}
 	};
 
-	const { mutate: contentlikeHandler } = useMutation(contentLike, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(['post']);
-		}
-	});
+	const { mutate: postlikeHandler } = usePostLikeHandler({ mutateFunction: postLike, postingId });
 
 	return (
 		<>
@@ -85,7 +80,7 @@ const Detail = () => {
 						<IoChatboxEllipsesOutline />
 						{data.comments.length}
 					</CommentCount>
-					<ContentLikeBtn onClick={() => contentlikeHandler(postingId)} isLike={data.like}>
+					<ContentLikeBtn onClick={() => postlikeHandler()} isLike={data.like}>
 						<AiOutlineLike />
 						{data.like_count}
 					</ContentLikeBtn>
