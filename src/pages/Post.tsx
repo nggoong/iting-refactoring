@@ -10,6 +10,7 @@ import { postingsAPI } from '../shared/api';
 import { Helmet } from 'react-helmet';
 import { TypePostPosting } from '../typings';
 import useUserState from '../hooks/useUserState';
+import usePostMutation from '../hooks/queries/usePostMutation';
 
 const Post = () => {
 	const queryClient = useQueryClient();
@@ -72,17 +73,7 @@ const Post = () => {
 			}
 		}
 	};
-	const { mutate: submitPosting } = useMutation(postingsAPI.postPosting, {
-		onSuccess: async () => {
-			await queryClient.invalidateQueries(['postings']);
-			return navigate('/viewer/posting/list');
-		},
-		onError: (err: any) => {
-			if (err.response.status === 401) return;
-			alert('게시글을 등록하지 못했습니다.');
-			navigate('/viewer/posting/list');
-		}
-	});
+	const { mutate: submitPosting } = usePostMutation();
 
 	const { mutate: submitEditing } = useMutation(postingsAPI.postEditing, {
 		onSuccess: async () => {
