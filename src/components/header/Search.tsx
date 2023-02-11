@@ -64,7 +64,6 @@ const Search = () => {
 		const inputResult = searchInput.replace(/[/!@#$%^&*~)(/?><,.\s]/g, '');
 		if (!inputResult) {
 			alert('특수문자 입력은 안 돼요!');
-			setSearchInput('');
 			return;
 		} else if (inputResult.length === 1 || searchInput.length === 1) {
 			alert('한 글자 이상으로 검색해주세요!');
@@ -72,8 +71,10 @@ const Search = () => {
 		}
 
 		if (pathname.includes('/posting')) {
+			setSearchInput('');
 			navigate(`/viewer/posting/search/${inputResult}`);
 		} else {
+			setSearchInput('');
 			navigate(`/viewer/room/search/${inputResult}`);
 		}
 	};
@@ -91,7 +92,7 @@ const Search = () => {
 					)}
 					{(!searchInput && searchInput.length < 2) ||
 						completedList?.map((value, index) => {
-							return <AutoCompleteCard key={index} value={value} />;
+							return <AutoCompleteCard key={index} value={value} setSearchInput={setSearchInput} />;
 						})}
 				</AutoComplete>
 				<div className="search-icon">

@@ -7,13 +7,15 @@ interface Props {
 		hashtag: string;
 		count: number;
 	};
+	setSearchInput: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const AutoCompleteCard = ({ value }: Props) => {
+const AutoCompleteCard = ({ value, setSearchInput }: Props) => {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 
 	const CompleteCardClickHandler = () => {
+		setSearchInput('');
 		if (pathname.includes('/viewer/room')) {
 			navigate(`/viewer/room/search/${value.hashtag}`);
 		} else if (pathname.includes('/viewer/posting')) {
