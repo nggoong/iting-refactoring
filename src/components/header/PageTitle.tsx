@@ -1,11 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { MdArrowBackIosNew } from 'react-icons/md';
-import { postingsAPI } from '../../shared/api';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { AxiosError } from 'axios';
+import useDeletePostMutation from '../../hooks/queries/useDeletePostMutation';
 
 interface Props {
 	title: string;
@@ -18,7 +16,6 @@ interface PageTitleWrapperProps {
 }
 
 const PageTitle = ({ title, isAction, postActions }: Props) => {
-	const queryClient = useQueryClient();
 	const location = useLocation();
 	const navigate = useNavigate();
 	const postingId = useParams().postingId;
@@ -28,17 +25,7 @@ const PageTitle = ({ title, isAction, postActions }: Props) => {
 		navigate(`/posting/edit/${postingId}`);
 	};
 
-	const { mutate: deletePosting } = useMutation(postingsAPI.postDelete, {
-		onSuccess: async () => {
-			await queryClient.invalidateQueries(['postings']);
-			return navigate('/viewer/posting/list');
-		},
-		onError: (err: AxiosError) => {
-			if (err.response?.status === 401) return;
-			alert('게시글을 삭제하지 못했습니다.');
-			navigate('/viewer/posting/list');
-		}
-	});
+	const { mutate: deletePosting } = useDeletePostMutation();
 	const postDeleteHandler = async () => {
 		const result = window.confirm('게시글을 삭제하시겠습니까?');
 		if (result) {

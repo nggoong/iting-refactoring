@@ -3,25 +3,21 @@ import styled from 'styled-components';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import * as StompJS from 'stompjs';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { chatroomAPI } from '../shared/api';
 import { Helmet } from 'react-helmet';
-
 import SubmitForm from '../components/submitForm/SubmitForm';
 import MyBubble from '../components/speechBubble/MyBubble';
 import OtherBubble from '../components/speechBubble/OtherBubble';
 import Header from '../components/header/Header';
 import Notice from '../components/speechBubble/Notice';
-
 import { TypeChatMessage, TypeChatRoomNavigateState } from '../typings';
+import useExitRoomMutation from '../hooks/queries/useExitRoomMutation';
 
 const ChatRoom = () => {
 	const [messages, setMessages] = useState<TypeChatMessage[]>([]);
 	const nicknameRef = useRef('');
 	const chatRef = useRef<HTMLDivElement | null>(null);
 	const tempRef = useRef<HTMLDivElement | null>(null);
-
-	const queryClient = useQueryClient();
 
 	const navigate = useNavigate();
 	const { state: navigateState } = useLocation() as TypeChatRoomNavigateState;
@@ -32,11 +28,7 @@ const ChatRoom = () => {
 	client.debug = null;
 	const headers = {};
 
-	const { mutate: exitRoom } = useMutation(chatroomAPI.exitRoom, {
-		onSuccess: () => {
-			return queryClient.invalidateQueries(['rooms']);
-		}
-	});
+	const { mutate: exitRoom } = useExitRoomMutation();
 
 	const disConnect = () => {
 		client.send(
@@ -118,7 +110,6 @@ const ChatRoom = () => {
 		return () => {
 			try {
 				if (!nicknameRef.current) return;
-
 				disConnect();
 			} catch (e) {
 				navigate('/viewer/room');

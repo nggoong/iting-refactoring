@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { userTypeTrans } from '../../shared/sharedFn';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AiOutlineLike } from 'react-icons/ai';
 import { editPostingTime } from '../../shared/sharedFn';
 import { commentsAPI } from '../../shared/api';
-import useUserState from '../../hooks/useUserState';
+import useUserState from '../../hooks/contexts/useUserState';
+import useCommentLikeMutation from '../../hooks/queries/useCommentLikeMutation';
+import useDeleteCommentMutation from '../../hooks/queries/useDeleteCommentMutation';
+import useEditCommentMutation from '../../hooks/queries/useEditCommentMutation';
 
 interface Props {
 	data: any;
@@ -28,29 +30,12 @@ interface CommentLikeBtnProps {
 
 const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEditStateForSubmit }: Props) => {
 	const commentEditInput = useRef<HTMLTextAreaElement | null>(null);
-	const queryClient = useQueryClient();
 
 	const [commentEditState, setCommentEditState] = useState(false);
 	const userState = useUserState();
 	const loginNickname = userState.nickname;
-
-	const { mutate: commentEditHandler } = useMutation(commentsAPI.editComment, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(['post']);
-		},
-		onError: (err: any) => {
-			alert(err.response.data);
-		}
-	});
-
-	const { mutate: commentDelHandler } = useMutation(commentsAPI.deleteComment, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(['post']);
-		},
-		onError: (err: any) => {
-			alert(err.response.data);
-		}
-	});
+	const { mutate: commentEditHandler } = useEditCommentMutation();
+	const { mutate: commentDelHandler } = useDeleteCommentMutation();
 
 	const commentLike = async (id: string) => {
 		if (data.like) {
@@ -60,14 +45,7 @@ const CommentCard = ({ data, postingId, commentEditStateForSubmit, setCommentEdi
 		}
 	};
 
-	const { mutate: commentlikeHandler } = useMutation(commentLike, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(['post']);
-		},
-		onError(err: any) {
-			alert(err.response.data);
-		}
-	});
+	const { mutate: commentlikeHandler } = useCommentLikeMutation({ mutateFunction: commentLike });
 
 	const deleteBtnClickHandler = () => {
 		const result = window.confirm('댓글을 삭제하시겠습니까?');

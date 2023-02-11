@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Header from '../components/header/Header';
 import ManagementCard from '../components/card/ManagementCard';
 import { userTypeTrans } from '../shared/sharedFn';
-import useUserState from '../hooks/useUserState';
+import useUserState from '../hooks/contexts/useUserState';
 
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';

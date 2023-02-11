@@ -6,7 +6,7 @@ import ErrorFound from '../components/notice/NotFound';
 import PrivateRoute from './PrivateRoute';
 import UserLimitRoute from './UserLimitRoute';
 import { PRIVATE_ROUTE_PATH, AUTH_PATH } from './routePath';
-import useUserState from '../hooks/useUserState';
+import useUserState from '../hooks/contexts/useUserState';
 
 const Detail = React.lazy(() => import('../pages/Detail'));
 const Post = React.lazy(() => import('../pages/Post'));

@@ -5,14 +5,14 @@ import { WhiteBackground, HRLineDiv } from '../style/sharedStyle';
 import Header from '../components/header/Header';
 import DeletableBadge from '../components/hashtag/DeletableBadge';
 import { hashtagValidation } from '../shared/sharedFn';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postingsAPI } from '../shared/api';
 import { Helmet } from 'react-helmet';
 import { TypePostPosting } from '../typings';
-import useUserState from '../hooks/useUserState';
+import useUserState from '../hooks/contexts/useUserState';
+import usePostMutation from '../hooks/queries/usePostMutation';
+import usePostEditMutation from '../hooks/queries/usePostEditMutation';
 
 const Post = () => {
-	const queryClient = useQueryClient();
 	const [hashInput, setHashInput] = useState('');
 	const userState = useUserState();
 	const hashRef = useRef<HTMLDivElement | null>(null);
@@ -72,30 +72,8 @@ const Post = () => {
 			}
 		}
 	};
-	const { mutate: submitPosting } = useMutation(postingsAPI.postPosting, {
-		onSuccess: async () => {
-			await queryClient.invalidateQueries(['postings']);
-			return navigate('/viewer/posting/list');
-		},
-		onError: (err: any) => {
-			if (err.response.status === 401) return;
-			alert('게시글을 등록하지 못했습니다.');
-			navigate('/viewer/posting/list');
-		}
-	});
-
-	const { mutate: submitEditing } = useMutation(postingsAPI.postEditing, {
-		onSuccess: async () => {
-			alert('게시글이 수정되었습니다.');
-			await queryClient.invalidateQueries(['postings']);
-			return navigate(`/detail/posting/${postingId}`);
-		},
-		onError: (err: any) => {
-			if (err.response.status === 401) return;
-			alert('게시글을 수정하지 못했습니다.');
-			navigate('/viewer/posting/list');
-		}
-	});
+	const { mutate: submitPosting } = usePostMutation();
+	const { mutate: submitEditing } = usePostEditMutation({ postingId });
 
 	const postSubmitHandler = () => {
 		const { title, posting_content } = postData;

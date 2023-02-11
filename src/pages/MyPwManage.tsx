@@ -5,7 +5,7 @@ import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import { TypeChangePassword } from '../typings';
-import useUserState from '../hooks/useUserState';
+import useUserState from '../hooks/contexts/useUserState';
 import { AuthAPI } from '../shared/api';
 
 const MyPwManage = () => {

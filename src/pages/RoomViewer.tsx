@@ -2,17 +2,15 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../components/header/Header';
 import RoomCard from '../components/card/RoomCard';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
-import { chatroomAPI } from '../shared/api';
-
 import Notice from '../components/notice/Notice';
 import Loading from '../components/loading/Loading';
-
 import { Helmet } from 'react-helmet';
 import ErrorFound from '../components/notice/NotFound';
 import { TypeChatRoom } from '../typings';
+import useScrollChatRoomQuery from '../hooks/queries/useScrollChatRoomQuery';
+import useScrollSearchChatRoomQuery from '../hooks/queries/useScrollSearchChatRoomQuery';
 
 const RoomViewer = () => {
 	const paramHashtag = useParams().hashtag;
@@ -23,30 +21,13 @@ const RoomViewer = () => {
 		fetchNextPage: listFetchNextPage,
 		isFetchingNextPage: isListFetchingNextPage,
 		isError: listFetchError
-	} = useInfiniteQuery(['rooms'], ({ pageParam = 1 }) => chatroomAPI.fetchRoomsListWithScroll(pageParam), {
-		enabled: !!!paramHashtag,
-		staleTime: 3000,
-		getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
-
-		retry: false
-	});
-
+	} = useScrollChatRoomQuery({ paramHashtag: paramHashtag! });
 	const {
 		data: searchListData,
 		fetchNextPage: searchFetchNextPage,
 		isFetchingNextPage: isSearchFetchingNextPage,
 		isError: searchListFetchError
-	} = useInfiniteQuery(
-		['rooms', 'search', paramHashtag],
-		({ pageParam = 0 }) => chatroomAPI.fetchSearchRoomsListWithScroll(pageParam, paramHashtag!),
-		{
-			enabled: !!paramHashtag,
-			staleTime: 3000,
-			getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
-
-			retry: false
-		}
-	);
+	} = useScrollSearchChatRoomQuery({ storecode: paramHashtag!, paramHashtag: paramHashtag! });
 
 	useEffect(() => {
 		if (inView) {

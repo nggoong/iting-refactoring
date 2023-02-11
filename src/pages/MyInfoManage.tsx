@@ -5,8 +5,8 @@ import Header from '../components/header/Header';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import { TypeChangeUserInfo } from '../typings';
-import useUserDispatch from '../hooks/useUserDispatch';
-import useUserState from '../hooks/useUserState';
+import useUserDispatch from '../hooks/contexts/useUserDispatch';
+import useUserState from '../hooks/contexts/useUserState';
 import { AuthAPI } from '../shared/api';
 
 const MyInfoManage = () => {
