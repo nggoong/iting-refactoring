@@ -6,7 +6,7 @@ interface Props {
 }
 
 const useScrollChatRoomQuery = ({ paramHashtag }: Props) => {
-	return useInfiniteQuery(['room'], ({ pageParam = 1 }) => chatroomAPI.fetchRoomsListWithScroll(pageParam), {
+	return useInfiniteQuery(['rooms'], ({ pageParam = 1 }) => chatroomAPI.fetchRoomsListWithScroll(pageParam), {
 		enabled: !!!paramHashtag,
 		staleTime: 3000,
 		getNextPageParam: (lastPage) => (!lastPage.isLast ? lastPage.nextPage : undefined),
