@@ -1,9 +1,8 @@
 import React, { useRef, memo } from 'react';
 import styled, { css } from 'styled-components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { BiRightArrowCircle } from 'react-icons/bi';
-import { commentsAPI } from '../../shared/api';
+import useAddCommentMutation from '../../hooks/queries/useAddCommentMutation';
 
 interface CommentAddBoxProps {
 	isShow?: boolean;
@@ -19,15 +18,8 @@ interface Props {
 
 const SubmitForm = ({ postingId, placeholderText, sendMsg, commentEditStateForSubmit }: Props) => {
 	const commentInput = useRef<HTMLInputElement | null>(null);
-	const queryClient = useQueryClient();
 	const location = useLocation();
-
-	const { mutate: commentAddHandler } = useMutation(commentsAPI.addComment, {
-		onSuccess: () => {
-			queryClient.invalidateQueries(['post']);
-			commentInput.current!.value = '';
-		}
-	});
+	const { mutate: commentAddHandler } = useAddCommentMutation({ commentInputRef: commentInput });
 
 	const submitButtonHandler = (e: React.MouseEvent<HTMLDivElement>) => {
 		e.preventDefault();
