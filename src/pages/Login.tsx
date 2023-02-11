@@ -4,7 +4,7 @@ import kakao_login from '../assets/images/kakao_login.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm, FieldErrors } from 'react-hook-form';
 import { Helmet } from 'react-helmet';
-import useUserDispatch from '../hooks/useUserDispatch';
+import useUserDispatch from '../hooks/contexts/useUserDispatch';
 import { TypeLogin } from '../typings';
 import { AuthAPI } from '../shared/api';
 

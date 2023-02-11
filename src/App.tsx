@@ -6,7 +6,7 @@ import theme from './style/theme';
 import { Helmet } from 'react-helmet';
 import * as Sentry from '@sentry/react';
 import Router from '../src/router';
-import useUserDispatch from './hooks/useUserDispatch';
+import useUserDispatch from './hooks/contexts/useUserDispatch';
 import { AuthAPI } from './shared/api';
 
 function App() {

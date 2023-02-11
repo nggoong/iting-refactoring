@@ -4,7 +4,7 @@ import { userTypeTrans } from '../../shared/sharedFn';
 import { AiOutlineLike } from 'react-icons/ai';
 import { editPostingTime } from '../../shared/sharedFn';
 import { commentsAPI } from '../../shared/api';
-import useUserState from '../../hooks/useUserState';
+import useUserState from '../../hooks/contexts/useUserState';
 import useCommentLikeMutation from '../../hooks/queries/useCommentLikeMutation';
 import useDeleteCommentMutation from '../../hooks/queries/useDeleteCommentMutation';
 import useEditCommentMutation from '../../hooks/queries/useEditCommentMutation';

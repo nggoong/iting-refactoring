@@ -5,7 +5,7 @@ import AutoCompleteCard from '../card/AutoCompleteCard';
 import { chatroomAPI, postingsAPI } from '../../shared/api';
 import { AxiosResponse } from 'axios';
 import { TypeCompletedSearch } from '../../typings';
-import useUserState from '../../hooks/useUserState';
+import useUserState from '../../hooks/contexts/useUserState';
 
 interface AutoCompleteProps {
 	isShow: string;

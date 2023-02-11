@@ -8,7 +8,7 @@ import { hashtagValidation } from '../shared/sharedFn';
 import { postingsAPI } from '../shared/api';
 import { Helmet } from 'react-helmet';
 import { TypePostPosting } from '../typings';
-import useUserState from '../hooks/useUserState';
+import useUserState from '../hooks/contexts/useUserState';
 import usePostMutation from '../hooks/queries/usePostMutation';
 import usePostEditMutation from '../hooks/queries/usePostEditMutation';
 
